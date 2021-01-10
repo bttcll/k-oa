@@ -119,7 +119,7 @@ export default new Vuex.Store({
         GeneraMatriceAdiacenza: (state, c) => GeneraMatriceAdiacenza(state, c.NumSt, c.Voti, c.file, c.alfa, c.min, c.max),
         RiempiGrafo: (state, c) => RiempiGrafo(state, c.file),
         Teacher: (state, c) => Teacher(state, c.studente, c.voto),
-        Gauss: (state, c) => Gauss(state, c.media, c.sigma, c.prec, c.NumSt, c.Voti),
+        Gauss: (state, c) => Gauss(state, c.seme, c.NumSt, c.media, c.varianza, c.min, c.max),
         InitializeStudentModelByTeacher: (state, c) => InitializeStudentModelByTeacher(state, c.delta),
         AssignRealGrade: (state, c) => AssignRealGrade(state, c.n),
         Knn: (state) => Knn(state)
@@ -665,100 +665,44 @@ function InizializzaTuttiDev(state) {
     return;
 }
 
-function Gauss(state, media, sigma, NumIntervalli, n, NumBlocchi) {
+function Gauss(state, lseed, numGen, mediaInput, varianzaInput, votoInf, votoSup) {
 
-    let y, Integrale, a, IntegraleTotale, PassoBlocco;
-    let cont;
-    let i, j;
-    let fp = "";
     let FileSaver = require('file-saver');
+    let fp = "";
+    let p, j, m;
+    let voti = [];
+    let lseed;
 
-    state.NUMSTUDENTI = n;
-
-    //printf("Inserisci il coefficiente di proporzionalità alfa:\n");
-    //scanf("%lf",&alfa);
-
-    let Perc = []; //state.NUMSTUDENTI
-    let Blocchi = []; //state.NUMSTUDENTI
-    //Inizializzo
-
-    //vado a gestire dinamicamente la state.classe
-    //dato che non viene inizializzata staticamente come con c
-    InizializzaCore(state);
-
-    // calcolo l'area della gaussiana
-
-
-    //gmax=massimo della campana gaussiana
-    //gmax=1.0/(sigma*sqrt(2*3.14));
-    //printf("media=%f sigma=%f gmax=%f\n",media,sigma,gmax);
+    //generaRand(voti,numGen,votoInf,votoSup);
     //system("pause");
-
-    PassoBlocco = (9.0 / NumBlocchi);
-    a = 1.0;
-    IntegraleTotale = CalcolaIntegraleGauss(1.0, 10.0, NumIntervalli, media, sigma);
-
-    //system("pause");
-
-    for (i = 0; i < NumBlocchi; i++) {
-        Integrale = CalcolaIntegraleGauss(a, a + PassoBlocco, NumIntervalli, media, sigma);
-        //system("pause");
-        Perc.push(Integrale / IntegraleTotale);
-        a += PassoBlocco;
-    }
-
-    for (i = 0; i < NumBlocchi; i++) {
-
-        Blocchi.push(Perc[i] * state.NUMSTUDENTI); // numero di studenti nel blocco i
-
-        y = Blocchi[i] - parseInt(Blocchi[i]);
-        if (y <= 0.49999)
-            Blocchi[i] = parseInt(Blocchi[i]);
+    for (let i = 0; i < numGen; i++) {
+        p = gasdev(lseed);
+        voti[i] = (varianzaInput * p + mediaInput);
+        // arrotondamento a 0.5
+        j = voti[i]; // per difetto
+        m = j + 1;
+        if (voti[i] <= j + 0.5)
+            voti[i] = j;
         else
-            Blocchi[i] = parseInt(Blocchi[i] + 1);
-
-    }
-
-    //=============Calcola numeri
-
-    //state.NUMSTUDENTI=num_campioni;
-    //fprintf(fp,"Kteacher,Frequency\n");
-    //system("pause");
-    cont = 0;
-    for (i = 0; i < NumBlocchi; i++) {
-
-        for (j = 0; j < parseInt(Blocchi[i]); j++) {
-
-            // console.log(j, cont, j + cont);
-
-            // aggiorna modello docente
-            state.classe[j + cont].kt = i + 1;
-            state.classe[j + cont].jt = (state.classe[j + cont].kt - 1) / (8 + Math.exp(state.classe[j + cont].kt - 10));
-            //state.classe[j+cont].dev=0.0;
-            //state.classe[j+cont].index=j+cont;
+            voti[i] = m;
+        while (voti[i] > (votoSup) || voti[i] < votoInf) {
+            voti[i] = varianzaInput * gasdev(lseed) + mediaInput;
+            j = voti[i]; // per difetto
+            m = j + 1;
+            if (voti[i] <= j + 0.5)
+                voti[i] = j;
+            else
+                voti[i] = m;
         }
-        //system("pause");
-        cont += parseInt(Blocchi[i]);
-        // console.log(cont);
 
-        //system("pause");
-
+        fp += voti[i] + "\n";
     }
-    //fclose(fp1);
-
-    state.NUMSTUDENTI = cont;
-    //system("pause");
-    // scrittura voti
-    // fp="\n"; probabilmente acapo errato
-    for (i = 0; i < state.NUMSTUDENTI; i++)
-        fp += state.classe[i].kt + "\n";
-    fp += state.classe[state.NUMSTUDENTI - 1].kt
 
     //salvo il file in locale
     let blob = new Blob([fp], {
         type: "text/plain;charset=utf-8"
     });
-    FileSaver.saveAs(blob, "grade_" + cont + ".txt");
+    FileSaver.saveAs(blob, "grade_" + numGen + ".txt");
 
     // Ripristina array + var
     state.Grafo = [];
@@ -770,24 +714,66 @@ function Gauss(state, media, sigma, NumIntervalli, n, NumBlocchi) {
     return;
 }
 
-function CalcolaIntegraleGauss(min, max, NumIntervalli, media, sigma) {
+function gasdev(idum) {
 
-    let x = min;
-    let somma = 0;
-    let i;
-    let passo;
+    let iset = 0;
+    let gset;
+    let fac, rsq, v1, v2;
 
-    passo = (max - min) / NumIntervalli;
-
-    for (i = 0; i < NumIntervalli; i++) {
-        somma += CalcolaGauss(x, x + passo, passo, media, sigma);
-        x += passo;
+    if (idum < 0) iset = 0;
+    if (iset == 0) {
+        do {
+            v1 = 2.0 * ran1(idum) - 1.0;
+            v2 = 2.0 * ran1(idum) - 1.0;
+            rsq = v1 * v1 + v2 * v2;
+        } while (rsq >= 1.0 || rsq == 0.0);
+        fac = sqrt(-2.0 * log(rsq) / rsq);
+        gset = v1 * fac;
+        iset = 1;
+        return v2 * fac;
+    } else {
+        iset = 0;
+        return gset;
     }
-    return somma;
 }
 
-function CalcolaGauss(a, b, passo, media, sigma) {
-    return (b - a) * (1.0 / (sigma * Math.sqrt(2 * 3.14))) * Math.exp(-Math.pow((a - media), 2) / (2 * Math.pow(sigma, 2)));
+function ran1(idum) {
+    // costanti
+    const IA = 16807;
+    const IM = 2147483647;
+    const AM = (1.0 / IM);
+    const IQ = 127773;
+    const IR = 2836;
+    const NTAB = 32;
+    const NDIV = (1 + (IM - 1) / NTAB);
+    const EPS = 1.2e-7;
+    const RNMX = (1.0 - EPS);
+
+    let j;
+    let k;
+    let iy = 0;
+    let iv = [NTAB];
+    let temp;
+
+    if (idum <= 0 || !iy) {
+        if (-(idum) < 1) idum = 1;
+        else idum = -(idum);
+        for (j = NTAB + 7; j >= 0; j--) {
+            k = (idum) / IQ;
+            idum = IA * (idum - k * IQ) - IR * k;
+            if (idum < 0) idum += IM;
+            if (j < NTAB) iv[j] = idum;
+        }
+        iy = iv[0];
+    }
+    k = (idum) / IQ;
+    idum = IA * (idum - k * IQ) - IR * k;
+    if (idum < 0) idum += IM;
+    j = iy / NDIV;
+    iy = iv[j];
+    iv[j] = idum;
+    if ((temp = AM * iy) > RNMX) return RNMX;
+    else return temp;
 }
 
 function InitializeStudentModelByTeacher(state, delta) {
