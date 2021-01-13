@@ -60,33 +60,32 @@
 
           <el-form label-position="left" label-width="250px">
             <el-form-item label="Students number: ">
-              <el-input-number v-model="studentsNumber" :step="10" :min="10" :max="10000" />
+              <el-input-number v-model="studentsNumber" :step="10" :min="10" :max="10000" :disabled=sceltoGauss />
             </el-form-item>
 
             <el-form-item label="Peer assessments: ">
-              <el-input-number v-model="gradesNumber" :min="1" :max="50" />
+              <el-input-number v-model="gradesNumber" :min="1" :max="50" :disabled=sceltoGauss />
             </el-form-item>
 
             <el-form-item label="Alfa: ">
-              <el-input-number v-model="alfa" :precision="2" :step="0.1" />
-            </el-form-item>
-
-            
-            <el-form-item label="Import grades (optional): ">
-              <el-button type="primary" size="medium" @click="dialogVisible = true" plain>Generate Gauss Grade</el-button>
-              <br>
-              <input type="file" @change="loadTextFromFile" accept=".txt" />
+              <el-input-number v-model="alfa" :precision="2" :step="0.1" :disabled=sceltoGauss />
             </el-form-item>
 
             <el-form-item label="Rating scale: " >
-              <el-slider v-model="kValue" range show-stops :min="1" :max="10" :marks="marks" style="width: 80%;"/>
+              <el-slider v-model="kValue" range show-stops :min="1" :max="10" :marks="marks" style="width: 80%;" :disabled=sceltoGauss />
+            </el-form-item>
+
+            <el-form-item label="Import grades (optional): ">
+              <el-button type="primary" size="medium" @click="dialogVisible = true, sceltoGauss=true" plain>Generate Gauss Grade</el-button>
+              <br>
+              <input type="file" @change="loadTextFromFile" accept=".txt" />
             </el-form-item>
 
             <br />
 
             <el-form-item>
               <el-button type="primary" @click="real">Build</el-button>
-              <el-button @click="studentsNumber=10, gradesNumber=1, kValue=[1, 10], alfa=0.1">Reset</el-button>
+              <el-button @click="studentsNumber=10, gradesNumber=1, kValue=[1, 10], alfa=0.1, sceltoGauss=false">Reset</el-button>
             </el-form-item>
           </el-form>
         </el-collapse-item>
@@ -99,17 +98,19 @@
           </template>
 
           <el-form label-position="left" label-width="150px">
+            <el-form-item label="Seed: ">
+              <el-input-number v-model="seme" :step="1000" />
+            </el-form-item>
             <el-form-item label="Average: ">
               <el-input-number v-model="media" :precision="2" :step="0.5" :min="1" :max="10" />
             </el-form-item>
-
-            <el-form-item label="Sigma: ">
-              <el-input-number v-model="sigma" :precision="2" :step="0.5" :min="1" :max="10" />
+            <el-form-item label="Variance: ">
+              <el-input-number v-model="varianza" :precision="2" :step="0.5" />
             </el-form-item>
 
             <el-form-item>
               <el-button type="primary" @click="gauss">Build</el-button>
-              <el-button @click="media=5.5, sigma=1">Reset</el-button>
+              <el-button @click="media=5.5, sigma=1, sceltoGauss=false">Reset</el-button>
             </el-form-item>
           </el-form>
         </el-dialog>
@@ -126,6 +127,7 @@ export default {
 
   data: function() {
     return {
+      sceltoGauss: false,
       dialogVisible: false,
       activeName: "1",
       loading: false,
@@ -133,7 +135,8 @@ export default {
       gradesNumber: 0,
       alfa: 0.1,
       media: 5.5,
-      sigma: 1,
+      seme: -1000,
+      varianza: 2,
       kValue: [1, 10],
       marks: {
         1: '1',
@@ -192,10 +195,11 @@ export default {
       const fromComponent = {
         // functionN: 6,
         NumSt: this.studentsNumber,
-        Voti: 9,
         media: this.media,
-        sigma: this.sigma,
-        prec: 100
+        seme: this.seme,
+        varianza: this.varianza,
+        min: this.kValue[0],
+        max: this.kValue[1],
       };
       this.loading = true;
       setTimeout(() => {

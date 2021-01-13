@@ -87,7 +87,8 @@ export default new Vuex.Store({
 
         //extra per la dashboard
         builded: 0,
-        kDone: 0
+        kDone: 0,
+        seed: 0
     },
     mutations: {
         resetAll(state) {
@@ -114,6 +115,7 @@ export default new Vuex.Store({
             state.nRealGrades = 0;
             state.builded = 0;
             state.kDone = 0;
+            state.seed = 0;
         },
         // state passa l'intero stato, c sono le variabili passate dai components
         GeneraMatriceAdiacenza: (state, c) => GeneraMatriceAdiacenza(state, c.NumSt, c.Voti, c.file, c.alfa, c.min, c.max),
@@ -123,7 +125,6 @@ export default new Vuex.Store({
         InitializeStudentModelByTeacher: (state, c) => InitializeStudentModelByTeacher(state, c.delta),
         AssignRealGrade: (state, c) => AssignRealGrade(state, c.n),
         Knn: (state) => Knn(state)
-
     },
 
     actions: {},
@@ -671,28 +672,28 @@ function Gauss(state, lseed, numGen, mediaInput, varianzaInput, votoInf, votoSup
     let fp = "";
     let p, j, m;
     let voti = [];
-    let lseed;
+    state.seed = lseed;
 
     //generaRand(voti,numGen,votoInf,votoSup);
     //system("pause");
     for (let i = 0; i < numGen; i++) {
-        p = gasdev(lseed);
-        voti[i] = (varianzaInput * p + mediaInput);
+        p = gasdev(state);
+        voti[i] = parseFloat((varianzaInput * p + mediaInput));
         // arrotondamento a 0.5
-        j = voti[i]; // per difetto
+        j = parseInt(voti[i]); // per difetto
         m = j + 1;
-        if (voti[i] <= j + 0.5)
-            voti[i] = j;
+        if (voti[i] <= parseFloat(j) + 0.5)
+            voti[i] = parseFloat(j);
         else
-            voti[i] = m;
+            voti[i] = parseFloat(m);
         while (voti[i] > (votoSup) || voti[i] < votoInf) {
-            voti[i] = varianzaInput * gasdev(lseed) + mediaInput;
-            j = voti[i]; // per difetto
+            voti[i] = parseFloat(varianzaInput * gasdev(state) + mediaInput);
+            j = parseInt(voti[i]); // per difetto
             m = j + 1;
             if (voti[i] <= j + 0.5)
-                voti[i] = j;
+                voti[i] = parseInt(j);
             else
-                voti[i] = m;
+                voti[i] = parseInt(m);
         }
 
         fp += voti[i] + "\n";
@@ -713,21 +714,24 @@ function Gauss(state, lseed, numGen, mediaInput, varianzaInput, votoInf, votoSup
 
     return;
 }
-
-function gasdev(idum) {
+function gasdev(state) {
 
     let iset = 0;
     let gset;
     let fac, rsq, v1, v2;
+    let i=0;
 
-    if (idum < 0) iset = 0;
+    if (state.seed < 0) iset = 0;
     if (iset == 0) {
         do {
-            v1 = 2.0 * ran1(idum) - 1.0;
-            v2 = 2.0 * ran1(idum) - 1.0;
+            v1 = 2.0 * ran1(state) - 1.0;
+            v2 = 2.0 * ran1(state) - 1.0;
+            console.log("v1: ", v1);
+            console.log("v2: ", v2);
             rsq = v1 * v1 + v2 * v2;
-        } while (rsq >= 1.0 || rsq == 0.0);
-        fac = sqrt(-2.0 * log(rsq) / rsq);
+            i++
+        } while (i<10);
+        fac = Math.sqrt(-2.0 * Math.log(rsq) / rsq);
         gset = v1 * fac;
         iset = 1;
         return v2 * fac;
@@ -737,7 +741,7 @@ function gasdev(idum) {
     }
 }
 
-function ran1(idum) {
+function ran1(state) {
     // costanti
     const IA = 16807;
     const IM = 2147483647;
@@ -755,23 +759,23 @@ function ran1(idum) {
     let iv = [NTAB];
     let temp;
 
-    if (idum <= 0 || !iy) {
-        if (-(idum) < 1) idum = 1;
-        else idum = -(idum);
+    if (state.seed <= 0 || !iy) {
+        if (-(state.seed) < 1) state.seed = 1;
+        else state.seed = -(state.seed);
         for (j = NTAB + 7; j >= 0; j--) {
-            k = (idum) / IQ;
-            idum = IA * (idum - k * IQ) - IR * k;
-            if (idum < 0) idum += IM;
-            if (j < NTAB) iv[j] = idum;
+            k = (state.seed) / IQ;
+            state.seed = IA * (state.seed - k * IQ) - IR * k;
+            if (state.seed < 0) state.seed += IM;
+            if (j < NTAB) iv[j] = state.seed;
         }
         iy = iv[0];
     }
-    k = (idum) / IQ;
-    idum = IA * (idum - k * IQ) - IR * k;
-    if (idum < 0) idum += IM;
-    j = iy / NDIV;
+    k = (state.seed) / IQ;
+    state.seed = IA * (state.seed - k * IQ) - IR * k;
+    if (state.seed < 0) state.seed += IM;
+    j = parseInt(iy / NDIV);
     iy = iv[j];
-    iv[j] = idum;
+    iv[j] = state.seed;
     if ((temp = AM * iy) > RNMX) return RNMX;
     else return temp;
 }
