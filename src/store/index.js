@@ -672,7 +672,9 @@ function Gauss(state, lseed, numGen, mediaInput, varianzaInput, votoInf, votoSup
     let fp = "";
     let p, j, m;
     let voti = [];
-    state.seed = lseed;
+
+    window.localStorage.clear();
+    window.localStorage.setItem('lseed', JSON.stringify(lseed));
 
     //generaRand(voti,numGen,votoInf,votoSup);
     //system("pause");
