@@ -672,24 +672,22 @@ function Gauss(state, lseed, numGen, mediaInput, varianzaInput, votoInf, votoSup
     let fp = "";
     let p, j, m;
     let voti = [];
-
-    window.localStorage.clear();
-    window.localStorage.setItem('lseed', JSON.stringify(lseed));
+    state.lseed=lseed;
 
     //generaRand(voti,numGen,votoInf,votoSup);
     //system("pause");
     for (let i = 0; i < numGen; i++) {
         p = gasdev(state);
-        voti[i] = parseFloat((varianzaInput * p + mediaInput));
+        voti[i] = (varianzaInput * p + mediaInput);
         // arrotondamento a 0.5
         j = parseInt(voti[i]); // per difetto
         m = j + 1;
-        if (voti[i] <= parseFloat(j) + 0.5)
-            voti[i] = parseFloat(j);
+        if (voti[i] <= (j) + 0.5)
+            voti[i] = (j);
         else
-            voti[i] = parseFloat(m);
+            voti[i] = (m);
         while (voti[i] > (votoSup) || voti[i] < votoInf) {
-            voti[i] = parseFloat(varianzaInput * gasdev(state) + mediaInput);
+            voti[i] = (varianzaInput * gasdev(state) + mediaInput);
             j = parseInt(voti[i]); // per difetto
             m = j + 1;
             if (voti[i] <= j + 0.5)
