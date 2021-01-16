@@ -2,8 +2,8 @@
   <div>
     <el-main>
       <p>
-        K-NN. This module is launched and all the SMs are
-        modified changing their positions in the (K,J) space;
+        K-NN. This module is launched and all the SMs are modified changing
+        their positions in the (K,J) space;
       </p>
 
       <el-card class="box-card" shadow="never">
@@ -19,8 +19,15 @@
 
       <br />
 
-      <Plotly :data="dataKJ" :layout="layoutKJ" :display-mode-bar="false"></Plotly>
+      <Plotly :data="dataKJ" :layout="layoutKJ" :display-mode-bar="false" />
       <Plotly :data="dataPT" :layout="layoutPT" :display-mode-bar="false" />
+      <div align="center">
+        <Plotly
+          :data="dataKJDev"
+          :layout="layoutKJdev"
+          :display-mode-bar="false"
+        />
+      </div>
     </el-main>
   </div>
 </template>
@@ -33,12 +40,12 @@ export default {
   name: "knn-component",
 
   components: {
-    Plotly
+    Plotly,
   },
 
   computed: mapState(["classe", "NUMSTUDENTI"]),
 
-  data: function() {
+  data: function () {
     return {
       componentKey: 0,
 
@@ -49,7 +56,7 @@ export default {
           name: "initial position",
           mode: "markers",
           type: "scatter",
-          marker: { color: "#409EFF" }
+          marker: { color: "#409EFF" },
         },
         {
           x: [],
@@ -57,14 +64,14 @@ export default {
           name: "updated",
           mode: "markers",
           type: "scatter",
-          marker: { color: "red" }
-        }
+          marker: { color: "red" },
+        },
       ],
 
       layoutKJ: {
         title: "Scatter chart of the space K,J distribuition",
         xaxis: { title: "K", range: [1, 10.1] },
-        yaxis: { title: "J", range: [0, 1] }
+        yaxis: { title: "J", range: [0, 1] },
       },
 
       dataPT: [
@@ -74,7 +81,7 @@ export default {
           name: "Initial distance ",
           type: "scatter",
           mode: "markers",
-          marker: { color: "#409EFF" }
+          marker: { color: "#409EFF" },
         },
         {
           x: [],
@@ -82,29 +89,87 @@ export default {
           name: "Updated",
           type: "scatter",
           mode: "markers",
-          marker: { color: "red" }
-        }
+          marker: { color: "red" },
+        },
       ],
 
       layoutPT: {
         title: "Peers vs Teacher",
         hoverlabel: {
-          bgcolor: "#FFF"
+          bgcolor: "#FFF",
         },
         xaxis: {
-          title: "Student"
+          title: "Student",
         },
         yaxis: {
           title: "Distance",
-          range: [0, 10]
-        }
-      }
+          range: [0, 10],
+        },
+      },
+      dataKJDev: [
+        {
+          x: [],
+          y: [],
+          z: [],
+          name: "",
+          hovertemplate: "K: %{x}" + "<br />J: %{y}" + "<br />Dev: %{z}",
+          mode: "markers",
+          marker: {
+            size: 5,
+            color: "#409EFF",
+            line: {
+              color: "white",
+              width: 0.5,
+            },
+          },
+          type: "scatter3d",
+        },
+        {
+          x: [],
+          y: [],
+          z: [],
+          name: "",
+          hovertemplate: "K: %{x}" + "<br />J: %{y}" + "<br />Dev: %{z}",
+          mode: "markers",
+          marker: {
+            size: 5,
+            color: "red",
+            line: {
+              color: "white",
+              width: 0.5,
+            },
+          },
+          type: "scatter3d",
+        },
+      ],
+
+      layoutKJdev: {
+        title: "K,J,Dev Space",
+        hoverlabel: {
+          bgcolor: "#FFF",
+        },
+        scene: {
+          xaxis: {
+            title: "K",
+            range: [1, 10],
+          },
+          yaxis: {
+            title: "J",
+            range: [0, 1],
+          },
+          zaxis: {
+            title: "Dev",
+          },
+        },
+        height: 800,
+        width: 800,
+      },
     };
   },
 
   methods: {
     ...mapMutations(["Knn"]),
-    startKnn: function() {
+    startKnn: function () {
       this.componentKey += 1;
 
       setTimeout(() => {
@@ -118,12 +183,17 @@ export default {
           this.dataPT[1].x.push(i);
           // this.dataPT[0].y.push(Math.abs(this.classe[i].kt - this.classe[i].k));
           this.dataPT[1].y.push(this.classe[i].delta);
+
+          //3dimensional
+          this.dataKJDev[1].x.push(this.classe[i].k);
+          this.dataKJDev[1].y.push(this.classe[i].j);
+          this.dataKJDev[1].z.push(this.classe[i].dev);
         }
       }, 500);
-    }
+    },
   },
 
-  created: function() {
+  created: function () {
     var i;
 
     for (i = 0; i < this.NUMSTUDENTI; i++) {
@@ -135,8 +205,13 @@ export default {
       this.dataPT[0].x.push(i);
       // this.dataPT[0].y.push(Math.abs(this.classe[i].kt - this.classe[i].k));
       this.dataPT[0].y.push(this.classe[i].delta);
+
+      //3dimensional
+      this.dataKJDev[0].x.push(this.classe[i].k);
+      this.dataKJDev[0].y.push(this.classe[i].j);
+      this.dataKJDev[0].z.push(this.classe[i].dev);
     }
-  }
+  },
 };
 </script>
 
