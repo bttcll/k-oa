@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 
 export default {
   name: "home-component",
@@ -56,6 +56,9 @@ export default {
     "builded",
     "kDone"
   ]),
+  methods: {
+    ...mapMutations(["loadAll"])
+  },
 
   data: function() {
     return {
@@ -64,6 +67,8 @@ export default {
   },
 
   created: function() {
+    if(localStorage.length>0)
+      this.loadAll();
     if (!this.NUMSTUDENTI) this.active = this.builded;
     else if (this.NUMSTUDENTI && this.NumeroCore > 2)
       this.active = 3 + this.kDone;

@@ -91,7 +91,61 @@ export default new Vuex.Store({
         seed: 0
     },
     mutations: {
+        saveAll(state){
+            localStorage.setItem("statisticsStudents", JSON.stringify(state.statisticsStudents));
+            localStorage.setItem("alfakT", state.alfakT);
+            localStorage.setItem("KMIN", state.KMIN);
+            localStorage.setItem("KMAX", state.KMAX);
+            localStorage.setItem("nCalcoli", state.nCalcoli);
+            localStorage.setItem("NumeroCore", state.NumeroCore);
+            localStorage.setItem("NumeroDistanze", state.NumeroDistanze);
+            localStorage.setItem("Grafo", JSON.stringify(state.Grafo));
+            localStorage.setItem("TeacherGrades", JSON.stringify(state.TeacherGrades));
+            localStorage.setItem("cont", JSON.stringify(state.cont));
+            localStorage.setItem("iterazioni", state.iterazioni);
+            localStorage.setItem("DEBUG", state.DEBUG);
+            localStorage.setItem("classe", JSON.stringify(state.classe));
+            localStorage.setItem("Core", JSON.stringify(state.Core));
+            localStorage.setItem("distanzaMediaStudenti", JSON.stringify(state.distanzaMediaStudenti));
+            localStorage.setItem("distanzaMedia", JSON.stringify(state.distanzaMedia));
+            localStorage.setItem("n_iterazioni", state.n_iterazioni);
+            localStorage.setItem("NUMSTUDENTI", state.NUMSTUDENTI);
+            localStorage.setItem("NUMSTUDENTIVOTATI", state.NUMSTUDENTIVOTATI);
+            localStorage.setItem("FrequenzeK", JSON.stringify(state.FrequenzeK));
+            localStorage.setItem("nRealGrades", state.nRealGrades);
+            localStorage.setItem("builded", state.builded);
+            localStorage.setItem("kDone", state.kDone);
+            localStorage.setItem("seed", state.seed);
+        },
+        loadAll(state){
+            state.statisticsStudents = JSON.parse(localStorage.getItem('statisticsStudents'));
+            state.alfakT = Number(localStorage.getItem('alfakT'));
+            state.KMIN = Number(localStorage.getItem('KMIN'));
+            state.KMAX =  Number(localStorage.getItem('KMAX'));
+            state.nCalcoli =  Number(localStorage.getItem('nCalcoli'));
+            state.NumeroCore =  Number(localStorage.getItem('NumeroCore'));
+            state.NumeroDistanze =  Number(localStorage.getItem('NumeroDistanze'));
+            state.Grafo = JSON.parse(localStorage.getItem('Grafo'));
+            state.TeacherGrades = JSON.parse(localStorage.getItem('TeacherGrades'));
+            state.cont = JSON.parse(localStorage.getItem('cont'));
+            state.iterazioni =  Number(localStorage.getItem('iterazioni'));
+            state.DEBUG = localStorage.getItem('DEBUG');
+            state.classe = JSON.parse(localStorage.getItem('classe'));
+            state.Core = JSON.parse(localStorage.getItem('Core'));
+            state.distanzaMediaStudenti = JSON.parse(localStorage.getItem('distanzaMediaStudenti'));
+            state.distanzaMedia = JSON.parse(localStorage.getItem('distanzaMedia'));
+            state.n_iterazioni =  Number(localStorage.getItem('n_iterazioni'));
+            state.NUMSTUDENTI =  Number(localStorage.getItem('NUMSTUDENTI'));
+            state.NUMSTUDENTIVOTATI =  Number(localStorage.getItem('NUMSTUDENTIVOTATI'));
+            state.FrequenzeK = JSON.parse(localStorage.getItem('FrequenzeK'));
+            state.nRealGrades =  Number(localStorage.getItem('nRealGrades'));
+            state.builded =  Number(localStorage.getItem('builded'));
+            state.kDone =  Number(localStorage.getItem('kDone'));
+            state.seed =  Number(localStorage.getItem('seed'));
+
+        },
         resetAll(state) {
+            localStorage.clear();
             state.statisticsStudents = [];
             state.alfakT = 0.1;
             state.KMIN = 1;
