@@ -2,14 +2,20 @@
   <div>
     <el-aside width="200px">
       <el-menu default-active="0">
-        <el-menu-item index="0" v-on:click="$emit('tabSelected', 'home-component')">
+        <el-menu-item
+          index="0"
+          v-on:click="$emit('tabSelected', 'home-component')"
+        >
           <i class="el-icon-s-home" />
           <span>Home</span>
         </el-menu-item>
 
-        <el-menu-item index="8" v-on:click="$emit('tabSelected', 'instructions-component')">
+        <el-menu-item
+          index="8"
+          v-on:click="$emit('tabSelected', 'instructions-component')"
+        >
           <i class="el-icon-question" />
-          <span>Instructions</span>
+          <span>Help</span>
         </el-menu-item>
 
         <el-menu-item index="1" v-on:click="$emit('tabSelected', 'load-mooc')">
@@ -66,6 +72,13 @@
           <i class="el-icon-download" />
           <span>Export MOOC</span>
         </el-menu-item>
+        <el-menu-item
+          index="8"
+          v-on:click="$emit('tabSelected', 'session-component')"
+        >
+          <i class="el-icon-switch-button" />
+          <span>Session</span>
+        </el-menu-item>
       </el-menu>
     </el-aside>
   </div>
@@ -81,15 +94,15 @@ export default {
     // VARIABILI DALLO STATO
     ...mapState(["NUMSTUDENTI", "NumeroCore"]),
 
-    isButtonDisabled: function() {
+    isButtonDisabled: function () {
       if (this.NUMSTUDENTI) return false;
       else return true;
     },
-    knnButton: function() {
+    knnButton: function () {
       if (this.NumeroCore > 2) return false;
       else return true;
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -105,8 +118,8 @@ export default {
   height: 100%;
 }
 
-span{
-  color: #409EFF;
+span {
+  color: #409eff;
   font-size: 15px;
 }
 </style>

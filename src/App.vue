@@ -23,6 +23,7 @@ import StudentsAll from "./components/StudentsAll";
 import ChartComponent from "./components/ChartComponent";
 import KnnComponent from "./components/KnnComponent";
 import ExportComponent from "./components/ExportComponent";
+import SessionComponent from "./components/SessionComponent";
 // import ImportGrades from "./components/ImportGrades";
 
 export default {
@@ -37,7 +38,8 @@ export default {
     StudentsAll,
     ChartComponent,
     KnnComponent,
-    ExportComponent
+    ExportComponent,
+    SessionComponent
     // ImportGrades
   },
   data() {

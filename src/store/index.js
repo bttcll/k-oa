@@ -91,55 +91,71 @@ export default new Vuex.Store({
         seed: 0
     },
     mutations: {
-        saveAll(state){
-            localStorage.setItem("statisticsStudents", JSON.stringify(state.statisticsStudents));
-            localStorage.setItem("alfakT", state.alfakT);
-            localStorage.setItem("KMIN", state.KMIN);
-            localStorage.setItem("KMAX", state.KMAX);
-            localStorage.setItem("nCalcoli", state.nCalcoli);
-            localStorage.setItem("NumeroCore", state.NumeroCore);
-            localStorage.setItem("NumeroDistanze", state.NumeroDistanze);
-            localStorage.setItem("TeacherGrades", JSON.stringify(state.TeacherGrades));
-            localStorage.setItem("cont", JSON.stringify(state.cont));
-            localStorage.setItem("iterazioni", state.iterazioni);
-            localStorage.setItem("DEBUG", state.DEBUG);
-            localStorage.setItem("classe", JSON.stringify(state.classe));
-            localStorage.setItem("Core", JSON.stringify(state.Core));
-            localStorage.setItem("distanzaMediaStudenti", JSON.stringify(state.distanzaMediaStudenti));
-            localStorage.setItem("distanzaMedia", JSON.stringify(state.distanzaMedia));
-            localStorage.setItem("n_iterazioni", state.n_iterazioni);
-            localStorage.setItem("NUMSTUDENTI", state.NUMSTUDENTI);
-            localStorage.setItem("NUMSTUDENTIVOTATI", state.NUMSTUDENTIVOTATI);
-            localStorage.setItem("FrequenzeK", JSON.stringify(state.FrequenzeK));
-            localStorage.setItem("nRealGrades", state.nRealGrades);
-            localStorage.setItem("builded", state.builded);
-            localStorage.setItem("kDone", state.kDone);
-            localStorage.setItem("seed", state.seed);
+        saveAll(state) {
+            let FileSaver = require('file-saver');
+            var msgpack = require("msgpack-lite");
+
+            // encode from JS Object to MessagePack (Buffer)
+            var buffer = msgpack.encode(state);
+
+            //salvo il file in locale
+            let blob = new Blob([buffer], {
+                type: "text/plain;charset=utf-8"
+            });
+            const d = new Date();
+            FileSaver.saveAs(blob, "session_"+d.getDate()+"_"+d.getMonth()+"_"+d.getFullYear());
+
+            // console.log( msgpack.decode(buffer));
+
+            // localStorage.setItem("statisticsStudents", JSON.stringify(state.statisticsStudents));
+            // localStorage.setItem("alfakT", state.alfakT);
+            // localStorage.setItem("KMIN", state.KMIN);
+            // localStorage.setItem("KMAX", state.KMAX);
+            // localStorage.setItem("nCalcoli", state.nCalcoli);
+            // localStorage.setItem("NumeroCore", state.NumeroCore);
+            // localStorage.setItem("NumeroDistanze", state.NumeroDistanze);
+            // localStorage.setItem("TeacherGrades", JSON.stringify(state.TeacherGrades));
+            // localStorage.setItem("cont", JSON.stringify(state.cont));
+            // localStorage.setItem("iterazioni", state.iterazioni);
+            // localStorage.setItem("DEBUG", state.DEBUG);
+            // localStorage.setItem("classe", JSON.stringify(state.classe));
+            // localStorage.setItem("Core", JSON.stringify(state.Core));
+            // localStorage.setItem("distanzaMediaStudenti", JSON.stringify(state.distanzaMediaStudenti));
+            // localStorage.setItem("distanzaMedia", JSON.stringify(state.distanzaMedia));
+            // localStorage.setItem("n_iterazioni", state.n_iterazioni);
+            // localStorage.setItem("NUMSTUDENTI", state.NUMSTUDENTI);
+            // localStorage.setItem("NUMSTUDENTIVOTATI", state.NUMSTUDENTIVOTATI);
+            // localStorage.setItem("FrequenzeK", JSON.stringify(state.FrequenzeK));
+            // localStorage.setItem("nRealGrades", state.nRealGrades);
+            // localStorage.setItem("builded", state.builded);
+            // localStorage.setItem("kDone", state.kDone);
+            // localStorage.setItem("seed", state.seed);
         },
-        loadAll(state){
-            state.statisticsStudents = JSON.parse(localStorage.getItem('statisticsStudents'));
-            state.alfakT = Number(localStorage.getItem('alfakT'));
-            state.KMIN = Number(localStorage.getItem('KMIN'));
-            state.KMAX =  Number(localStorage.getItem('KMAX'));
-            state.nCalcoli =  Number(localStorage.getItem('nCalcoli'));
-            state.NumeroCore =  Number(localStorage.getItem('NumeroCore'));
-            state.NumeroDistanze =  Number(localStorage.getItem('NumeroDistanze'));
-            state.TeacherGrades = JSON.parse(localStorage.getItem('TeacherGrades'));
-            state.cont = JSON.parse(localStorage.getItem('cont'));
-            state.iterazioni =  Number(localStorage.getItem('iterazioni'));
-            state.DEBUG = localStorage.getItem('DEBUG');
-            state.classe = JSON.parse(localStorage.getItem('classe'));
-            state.Core = JSON.parse(localStorage.getItem('Core'));
-            state.distanzaMediaStudenti = JSON.parse(localStorage.getItem('distanzaMediaStudenti'));
-            state.distanzaMedia = JSON.parse(localStorage.getItem('distanzaMedia'));
-            state.n_iterazioni =  Number(localStorage.getItem('n_iterazioni'));
-            state.NUMSTUDENTI =  Number(localStorage.getItem('NUMSTUDENTI'));
-            state.NUMSTUDENTIVOTATI =  Number(localStorage.getItem('NUMSTUDENTIVOTATI'));
-            state.FrequenzeK = JSON.parse(localStorage.getItem('FrequenzeK'));
-            state.nRealGrades =  Number(localStorage.getItem('nRealGrades'));
-            state.builded =  Number(localStorage.getItem('builded'));
-            state.kDone =  Number(localStorage.getItem('kDone'));
-            state.seed =  Number(localStorage.getItem('seed'));
+        loadAll(state) {
+            console.log(state.KMAX);
+            // state.statisticsStudents = JSON.parse(localStorage.getItem('statisticsStudents'));
+            // state.alfakT = Number(localStorage.getItem('alfakT'));
+            // state.KMIN = Number(localStorage.getItem('KMIN'));
+            // state.KMAX = Number(localStorage.getItem('KMAX'));
+            // state.nCalcoli = Number(localStorage.getItem('nCalcoli'));
+            // state.NumeroCore = Number(localStorage.getItem('NumeroCore'));
+            // state.NumeroDistanze = Number(localStorage.getItem('NumeroDistanze'));
+            // state.TeacherGrades = JSON.parse(localStorage.getItem('TeacherGrades'));
+            // state.cont = JSON.parse(localStorage.getItem('cont'));
+            // state.iterazioni = Number(localStorage.getItem('iterazioni'));
+            // state.DEBUG = localStorage.getItem('DEBUG');
+            // state.classe = JSON.parse(localStorage.getItem('classe'));
+            // state.Core = JSON.parse(localStorage.getItem('Core'));
+            // state.distanzaMediaStudenti = JSON.parse(localStorage.getItem('distanzaMediaStudenti'));
+            // state.distanzaMedia = JSON.parse(localStorage.getItem('distanzaMedia'));
+            // state.n_iterazioni = Number(localStorage.getItem('n_iterazioni'));
+            // state.NUMSTUDENTI = Number(localStorage.getItem('NUMSTUDENTI'));
+            // state.NUMSTUDENTIVOTATI = Number(localStorage.getItem('NUMSTUDENTIVOTATI'));
+            // state.FrequenzeK = JSON.parse(localStorage.getItem('FrequenzeK'));
+            // state.nRealGrades = Number(localStorage.getItem('nRealGrades'));
+            // state.builded = Number(localStorage.getItem('builded'));
+            // state.kDone = Number(localStorage.getItem('kDone'));
+            // state.seed = Number(localStorage.getItem('seed'));
 
         },
         resetAll(state) {
@@ -724,7 +740,7 @@ function Gauss(state, lseed, numGen, mediaInput, varianzaInput, votoInf, votoSup
     let fp = "";
     let p, j, m;
     let voti = [];
-    state.lseed=lseed;
+    state.lseed = lseed;
 
     //generaRand(voti,numGen,votoInf,votoSup);
     //system("pause");
@@ -771,7 +787,7 @@ function gasdev(state) {
     let iset = 0;
     let gset;
     let fac, rsq, v1, v2;
-    let i=0;
+    let i = 0;
 
     if (state.seed < 0) iset = 0;
     if (iset == 0) {
@@ -782,7 +798,7 @@ function gasdev(state) {
             console.log("v2: ", v2);
             rsq = v1 * v1 + v2 * v2;
             i++
-        } while (i<10);
+        } while (i < 10);
         fac = Math.sqrt(-2.0 * Math.log(rsq) / rsq);
         gset = v1 * fac;
         iset = 1;
