@@ -67,8 +67,13 @@ export default {
   },
 
   created: function() {
-    if(localStorage.length>0)
+    try {
+      if(localStorage.length>0)
       this.loadAll();
+    } catch (error) {
+      console.error(error);
+    }
+    
     if (!this.NUMSTUDENTI) this.active = this.builded;
     else if (this.NUMSTUDENTI && this.NumeroCore > 2)
       this.active = 3 + this.kDone;

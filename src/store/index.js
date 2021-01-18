@@ -99,7 +99,6 @@ export default new Vuex.Store({
             localStorage.setItem("nCalcoli", state.nCalcoli);
             localStorage.setItem("NumeroCore", state.NumeroCore);
             localStorage.setItem("NumeroDistanze", state.NumeroDistanze);
-            localStorage.setItem("Grafo", JSON.stringify(state.Grafo));
             localStorage.setItem("TeacherGrades", JSON.stringify(state.TeacherGrades));
             localStorage.setItem("cont", JSON.stringify(state.cont));
             localStorage.setItem("iterazioni", state.iterazioni);
@@ -125,7 +124,6 @@ export default new Vuex.Store({
             state.nCalcoli =  Number(localStorage.getItem('nCalcoli'));
             state.NumeroCore =  Number(localStorage.getItem('NumeroCore'));
             state.NumeroDistanze =  Number(localStorage.getItem('NumeroDistanze'));
-            state.Grafo = JSON.parse(localStorage.getItem('Grafo'));
             state.TeacherGrades = JSON.parse(localStorage.getItem('TeacherGrades'));
             state.cont = JSON.parse(localStorage.getItem('cont'));
             state.iterazioni =  Number(localStorage.getItem('iterazioni'));
