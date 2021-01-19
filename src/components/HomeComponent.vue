@@ -3,7 +3,6 @@
     <el-main>
       <div>
         <h1 class="titolo">The moocs simulation system</h1>
-        
       </div>
       <br />
       <p></p>
@@ -18,13 +17,15 @@
       <el-divider></el-divider>
 
       <table align="center">
-        <caption>STUDENTS COMMUNITY</caption>
+        <caption>
+          <p>STUDENTS COMMUNITY</p>
+        </caption>
         <tr>
           <td>
             <el-card class="box-card" shadow="hover">
               <div class="text item">
                 <h1>Students number</h1>
-                <h2>{{NUMSTUDENTI}}</h2>
+                <h2>{{ NUMSTUDENTI }}</h2>
               </div>
             </el-card>
           </td>
@@ -33,7 +34,7 @@
             <el-card class="box-card" shadow="hover">
               <div class="text item">
                 <h1>Peer assessments</h1>
-                <h2>{{NUMSTUDENTIVOTATI}}</h2>
+                <h2>{{ NUMSTUDENTIVOTATI }}</h2>
               </div>
             </el-card>
           </td>
@@ -44,7 +45,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState } from "vuex";
 
 export default {
   name: "home-component",
@@ -54,31 +55,21 @@ export default {
     "NUMSTUDENTIVOTATI",
     "NumeroCore",
     "builded",
-    "kDone"
+    "kDone",
   ]),
-  methods: {
-    ...mapMutations(["loadAll"])
-  },
 
-  data: function() {
+  data: function () {
     return {
-      active: 0
+      active: 0,
     };
   },
 
-  created: function() {
-    try {
-      if(localStorage.length>0)
-      this.loadAll();
-    } catch (error) {
-      console.error(error);
-    }
-    
+  created: function () {
     if (!this.NUMSTUDENTI) this.active = this.builded;
     else if (this.NUMSTUDENTI && this.NumeroCore > 2)
       this.active = 3 + this.kDone;
     else this.active = 2;
-  }
+  },
 };
 </script>
 
@@ -93,8 +84,8 @@ export default {
   min-width: 300px;
 }
 
-.titolo{
-  color: #409EFF;
+.titolo {
+  color: #409eff;
   text-align: center;
 }
 </style>

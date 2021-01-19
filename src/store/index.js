@@ -92,70 +92,52 @@ export default new Vuex.Store({
     },
     mutations: {
         saveAll(state) {
-            let FileSaver = require('file-saver');
-            var msgpack = require("msgpack-lite");
+            const FileSaver = require('file-saver');
+            const msgpack = require("msgpack-lite");
+            const toHexString = bytes =>
+                bytes.reduce((str, byte) => str + byte.toString(16).padStart(2, '0'), '');
 
             // encode from JS Object to MessagePack (Buffer)
-            var buffer = msgpack.encode(state);
-
+            const buffer = msgpack.encode(state);
             //salvo il file in locale
-            let blob = new Blob([buffer], {
+            const blob = new Blob([toHexString(buffer)], {
                 type: "text/plain;charset=utf-8"
             });
             const d = new Date();
-            FileSaver.saveAs(blob, "session_"+d.getDate()+"_"+d.getMonth()+"_"+d.getFullYear());
+            FileSaver.saveAs(blob, "session_" + d.getDate() + "_" + d.getMonth() + "_" + d.getFullYear()+".bin");
 
-            // console.log( msgpack.decode(buffer));
-
-            // localStorage.setItem("statisticsStudents", JSON.stringify(state.statisticsStudents));
-            // localStorage.setItem("alfakT", state.alfakT);
-            // localStorage.setItem("KMIN", state.KMIN);
-            // localStorage.setItem("KMAX", state.KMAX);
-            // localStorage.setItem("nCalcoli", state.nCalcoli);
-            // localStorage.setItem("NumeroCore", state.NumeroCore);
-            // localStorage.setItem("NumeroDistanze", state.NumeroDistanze);
-            // localStorage.setItem("TeacherGrades", JSON.stringify(state.TeacherGrades));
-            // localStorage.setItem("cont", JSON.stringify(state.cont));
-            // localStorage.setItem("iterazioni", state.iterazioni);
-            // localStorage.setItem("DEBUG", state.DEBUG);
-            // localStorage.setItem("classe", JSON.stringify(state.classe));
-            // localStorage.setItem("Core", JSON.stringify(state.Core));
-            // localStorage.setItem("distanzaMediaStudenti", JSON.stringify(state.distanzaMediaStudenti));
-            // localStorage.setItem("distanzaMedia", JSON.stringify(state.distanzaMedia));
-            // localStorage.setItem("n_iterazioni", state.n_iterazioni);
-            // localStorage.setItem("NUMSTUDENTI", state.NUMSTUDENTI);
-            // localStorage.setItem("NUMSTUDENTIVOTATI", state.NUMSTUDENTIVOTATI);
-            // localStorage.setItem("FrequenzeK", JSON.stringify(state.FrequenzeK));
-            // localStorage.setItem("nRealGrades", state.nRealGrades);
-            // localStorage.setItem("builded", state.builded);
-            // localStorage.setItem("kDone", state.kDone);
-            // localStorage.setItem("seed", state.seed);
         },
-        loadAll(state) {
-            console.log(state.KMAX);
-            // state.statisticsStudents = JSON.parse(localStorage.getItem('statisticsStudents'));
-            // state.alfakT = Number(localStorage.getItem('alfakT'));
-            // state.KMIN = Number(localStorage.getItem('KMIN'));
-            // state.KMAX = Number(localStorage.getItem('KMAX'));
-            // state.nCalcoli = Number(localStorage.getItem('nCalcoli'));
-            // state.NumeroCore = Number(localStorage.getItem('NumeroCore'));
-            // state.NumeroDistanze = Number(localStorage.getItem('NumeroDistanze'));
-            // state.TeacherGrades = JSON.parse(localStorage.getItem('TeacherGrades'));
-            // state.cont = JSON.parse(localStorage.getItem('cont'));
-            // state.iterazioni = Number(localStorage.getItem('iterazioni'));
-            // state.DEBUG = localStorage.getItem('DEBUG');
-            // state.classe = JSON.parse(localStorage.getItem('classe'));
-            // state.Core = JSON.parse(localStorage.getItem('Core'));
-            // state.distanzaMediaStudenti = JSON.parse(localStorage.getItem('distanzaMediaStudenti'));
-            // state.distanzaMedia = JSON.parse(localStorage.getItem('distanzaMedia'));
-            // state.n_iterazioni = Number(localStorage.getItem('n_iterazioni'));
-            // state.NUMSTUDENTI = Number(localStorage.getItem('NUMSTUDENTI'));
-            // state.NUMSTUDENTIVOTATI = Number(localStorage.getItem('NUMSTUDENTIVOTATI'));
-            // state.FrequenzeK = JSON.parse(localStorage.getItem('FrequenzeK'));
-            // state.nRealGrades = Number(localStorage.getItem('nRealGrades'));
-            // state.builded = Number(localStorage.getItem('builded'));
-            // state.kDone = Number(localStorage.getItem('kDone'));
-            // state.seed = Number(localStorage.getItem('seed'));
+        loadAll(state, file) {
+            const msgpack = require("msgpack-lite");
+            const fromHexString = hexString =>
+                new Uint8Array(hexString.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+            // decode from MessagePack (Buffer) to JS Object
+            const data = msgpack.decode(fromHexString(file));
+
+            state.statisticsStudents = data.statisticsStudents;
+            state.alfakT = data.alfakT;
+            state.KMIN = data.KMIN;
+            state.KMAX = data.KMAX;
+            state.nCalcoli = data.nCalcoli;
+            state.NumeroCore = data.NumeroCore;
+            state.NumeroDistanze = data.NumeroDistanze;
+            state.Grafo = data.Grafo;
+            state.TeacherGrades = data.TeacherGrades;
+            state.cont = data.cont;
+            state.iterazioni = data.iterazioni;
+            state.DEBUG = data.DEBUG;
+            state.classe = data.classe;
+            state.Core = data.Core;
+            state.distanzaMediaStudenti = data.distanzaMediaStudenti;
+            state.distanzaMedia = data.distanzaMedia;
+            state.n_iterazioni = data.n_iterazioni;
+            state.NUMSTUDENTI = data.NUMSTUDENTI;
+            state.NUMSTUDENTIVOTATI = data.NUMSTUDENTIVOTATI;
+            state.FrequenzeK = data.FrequenzeK;
+            state.nRealGrades = data.nRealGrades;
+            state.builded = data.builded;
+            state.kDone = data.kDone;
+            state.seed = data.seed;
 
         },
         resetAll(state) {

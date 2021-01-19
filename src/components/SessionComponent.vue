@@ -3,7 +3,7 @@
     <el-main v-loading="loading" element-loading-text="Loading...">
       <table align="center">
         <caption>
-          Session management
+          <p>SESSION MANAGEMENT</p>
         </caption>
         <tr>
           <td>
@@ -44,6 +44,20 @@
         </tr>
       </table>
     </el-main>
+    <el-dialog
+      title="Quit session"
+      :visible.sync="centerDialogVisible"
+      width="30%"
+      center
+    >
+      <span>Are you sure to close this tab?</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="centerDialogVisible = false">Cancel</el-button>
+        <el-button type="primary" @click="quit"
+          >Confirm</el-button
+        >
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -54,6 +68,7 @@ export default {
   name: "session-component",
   data: function () {
     return {
+      centerDialogVisible: false,
       loading: false,
     };
   },
@@ -61,19 +76,19 @@ export default {
   computed: mapState(["NUMSTUDENTI"]),
 
   methods: {
-    ...mapMutations(["resetAll", "RiempiGrafo", "saveAll"]),
+    ...mapMutations(["resetAll", "RiempiGrafo", "saveAll", "loadAll"]),
+
+    quit: function(){
+      close();
+    },
 
     saveSession: function () {
       this.loading = true;
       setTimeout(() => {
         this.saveAll();
+        this.centerDialogVisible = true;
         this.loading = false;
       }, 500);
-
-      setTimeout(() => {
-        this.resetAll();
-        close();
-      }, 4000);
     },
 
     loadTextFromFile(ev) {
@@ -87,24 +102,18 @@ export default {
       // stampo qualcosa non va, altrimenti faccio la funzione
 
       reader.onload = (e) => {
-        const fromComponent = {
-          // functionN: 2,
-          file: e.target.result,
-        };
-
         // INIZIO CARICAMENTO
         //MESSAGGIO DI BUILD
-        this.$message("Peer-assessment time...");
+        this.$message("Loading session...");
         this.loading = true;
 
         setTimeout(() => {
           // FUNZIONE + TUTTO OK O NO
-          this.RiempiGrafo(fromComponent);
-          this.saveAll();
+          this.loadAll(e.target.result);
 
           if (this.NUMSTUDENTI) {
             this.$message({
-              message: "Congrats, MOOC loaded.",
+              message: "Congrats, session loaded.",
               type: "success",
             });
           }

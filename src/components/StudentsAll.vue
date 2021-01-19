@@ -248,8 +248,7 @@ export default {
     ...mapMutations([
       "Teacher",
       "InitializeStudentModelByTeacher",
-      "AssignRealGrade",
-      "saveAll"
+      "AssignRealGrade"
     ]),
 
     // kContent: function(row, column, cellValue, index){
@@ -295,7 +294,6 @@ export default {
         // this.$emit('componentEvent', fromComponent);
         // FUNZIONE DALLO STATO
         this.Teacher(fromComponent);
-        this.saveAll();
         this.loading = false;
       }, 500);
       this.componentKey += 1;
@@ -310,7 +308,6 @@ export default {
       setTimeout(() => {
         // this.$emit('componentEvent', fromComponent);
         this.InitializeStudentModelByTeacher(fromComponent);
-        this.saveAll();
         this.loading = false;
       }, 500);
       this.componentKey += 1;
@@ -325,7 +322,6 @@ export default {
       setTimeout(() => {
         // this.$emit('componentEvent', fromComponent);
         this.AssignRealGrade(fromComponent);
-        this.saveAll();
         this.loading = false;
       }, 500);
       this.componentKey += 1;

@@ -168,14 +168,13 @@ export default {
   },
 
   methods: {
-    ...mapMutations(["Knn", "saveAll"]),
+    ...mapMutations(["Knn"]),
     startKnn: function () {
       this.componentKey += 1;
 
       setTimeout(() => {
         // this.$emit('componentEvent', fromComponent);
         this.Knn();
-        this.saveAll();
         for (let i = 0; i < this.NUMSTUDENTI; i++) {
           //scatter-chart
           this.dataKJ[1].x.push(this.classe[i].k);

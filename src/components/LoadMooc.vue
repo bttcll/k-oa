@@ -35,7 +35,7 @@ export default {
   computed: mapState(["NUMSTUDENTI"]),
 
   methods: {
-    ...mapMutations(["resetAll", "RiempiGrafo", "saveAll"]),
+    ...mapMutations(["resetAll", "RiempiGrafo"]),
 
     loadTextFromFile(ev) {
       //cancello lo stato
@@ -61,8 +61,6 @@ export default {
         setTimeout(() => {
           // FUNZIONE + TUTTO OK O NO
           this.RiempiGrafo(fromComponent);
-          this.saveAll();
-
           if (this.NUMSTUDENTI) {
             this.$message({
               message: "Congrats, MOOC loaded.",
