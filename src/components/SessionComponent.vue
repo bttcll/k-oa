@@ -30,12 +30,12 @@
           <td>
             <el-card class="box-card" shadow="hover">
               <div class="text item" align="center">
-                <h1>Save actual session and quit</h1>
+                <h1>Save the current session and quit</h1>
                 <el-button
                   type="danger"
                   icon="el-icon-switch-button"
                   style="width: 100px; height: 100px; font-size: 20px"
-                  @click="saveSession"
+                  @click="saveSession()"
                   circle
                 ></el-button>
               </div>
@@ -44,20 +44,6 @@
         </tr>
       </table>
     </el-main>
-    <el-dialog
-      title="Quit session"
-      :visible.sync="centerDialogVisible"
-      width="30%"
-      center
-    >
-      <span>Are you sure to close this tab?</span>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="centerDialogVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="quit"
-          >Confirm</el-button
-        >
-      </span>
-    </el-dialog>
   </div>
 </template>
 
@@ -68,7 +54,6 @@ export default {
   name: "session-component",
   data: function () {
     return {
-      centerDialogVisible: false,
       loading: false,
     };
   },
@@ -78,17 +63,17 @@ export default {
   methods: {
     ...mapMutations(["resetAll", "RiempiGrafo", "saveAll", "loadAll"]),
 
-    quit: function(){
-      close();
-    },
-
     saveSession: function () {
       this.loading = true;
       setTimeout(() => {
         this.saveAll();
-        this.centerDialogVisible = true;
         this.loading = false;
       }, 500);
+
+      // reload page
+      setTimeout(() => {
+        window.location.reload(true);
+      }, 1000);
     },
 
     loadTextFromFile(ev) {
