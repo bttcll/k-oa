@@ -69,9 +69,9 @@ export default {
       ],
 
       layoutKJ: {
-        title: "Scatter chart of the space K,J distribuition",
-        xaxis: { title: "K", range: [1, 10.1] },
-        yaxis: { title: "J", range: [0, 1] },
+        title: "(KP,JP) Distribution",
+        xaxis: { title: "KP", range: [1, 10.1] },
+        yaxis: { title: "JP", range: [0, 1] },
       },
 
       dataPT: [
@@ -94,15 +94,15 @@ export default {
       ],
 
       layoutPT: {
-        title: "Peers vs Teacher",
+        title: "KP Vs. KT Grades Distance",
         hoverlabel: {
           bgcolor: "#FFF",
         },
         xaxis: {
-          title: "Student",
+          title: "Students",
         },
         yaxis: {
-          title: "Distance",
+          title: "JP",
           range: [0, 10],
         },
       },

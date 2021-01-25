@@ -8,7 +8,11 @@
         </h1>
 
         <div v-if="value2" align="center">
-          <Plotly :data="dataKJDev" :layout="layoutKJdev" :display-mode-bar="false" />
+          <Plotly
+            :data="dataKJDev"
+            :layout="layoutKJdev"
+            :display-mode-bar="false"
+          />
         </div>
 
         <table v-if="!value2">
@@ -22,47 +26,63 @@
                 <div class="text item">
                   <b>Compare Distributions Peers-Teacher</b>
 
-                  <ul style="list-style-type:circle;">
-                    <li>CoreNumber: {{NumeroCore}}</li>
+                  <ul style="list-style-type: circle">
+                    <li>CoreNumber: {{ NumeroCore }}</li>
                     <br />
-                    <li>TeacherAverage: {{mediaProf}}</li>
+                    <li>TeacherAverage: {{ mediaProf }}</li>
                     <br />
-                    <li>TeacherDifference: {{scartoProf}}</li>
+                    <li>TeacherDifference: {{ scartoProf }}</li>
                     <br />
-                    <li>StudentsAverage: {{mediaStud}}</li>
+                    <li>StudentsAverage: {{ mediaStud }}</li>
                     <br />
-                    <li>StudentsDifference: {{scartoStud}}</li>
+                    <li>StudentsDifference: {{ scartoStud }}</li>
                     <br />
                     <!-- <li>Delta: {{delta}} </li><br /> -->
                     <!-- <li>Delta Peers-Teacher real: {{deltaR}} </li> -->
-                    <li>Delta: {{deltaR}}</li>
+                    <li>Delta: {{ deltaR }}</li>
                   </ul>
 
                   <b>Distances between teacher and student distributions</b>
-                  <ul style="list-style-type:circle;">
-                    <li>K Distance: {{sumK}}</li>
+                  <ul style="list-style-type: circle">
+                    <li>K Distance: {{ sumK }}</li>
                     <br />
-                    <li>J Distance: {{sumJ}}</li>
+                    <li>J Distance: {{ sumJ }}</li>
                   </ul>
                 </div>
               </el-card>
             </td>
 
             <td>
-              <Plotly :data="dataK" :layout="layoutK" :display-mode-bar="false" />
+              <Plotly
+                :data="dataK"
+                :layout="layoutK"
+                :display-mode-bar="false"
+              />
             </td>
           </tr>
 
           <tr>
             <td>
-              <Plotly :data="dataKT" :layout="layoutKT" :display-mode-bar="false" />
+              <Plotly
+                :data="dataKT"
+                :layout="layoutKT"
+                :display-mode-bar="false"
+              />
             </td>
             <td>
-              <Plotly :data="dataKJ" :layout="layoutKJ" :display-mode-bar="false" />
+              <Plotly
+                :data="dataKJ"
+                :layout="layoutKJ"
+                :display-mode-bar="false"
+              />
             </td>
 
             <td>
-              <Plotly :data="dataDev" :layout="layoutDev" :display-mode-bar="false" />
+              <Plotly
+                :data="dataDev"
+                :layout="layoutDev"
+                :display-mode-bar="false"
+              />
             </td>
           </tr>
         </table>
@@ -79,14 +99,14 @@ import { Plotly } from "vue-plotly";
 
 export default {
   components: {
-    Plotly
+    Plotly,
   },
 
   //funzioni per il calcolo della statistica fanno riferimento a {{}}
   computed: {
     ...mapState(["classe", "NUMSTUDENTI", "NumeroCore", "TeacherGrades"]),
 
-    mediaProf: function() {
+    mediaProf: function () {
       var i, somma;
       somma = 0;
 
@@ -98,7 +118,7 @@ export default {
       return Number.parseFloat(somma / this.NumeroCore).toPrecision(4);
     },
 
-    scartoProf: function() {
+    scartoProf: function () {
       var i, somma;
       somma = 0;
 
@@ -113,7 +133,7 @@ export default {
       );
     },
 
-    mediaStud: function() {
+    mediaStud: function () {
       //calcoli per tutti gli studenti
       var i, somma;
       somma = 0;
@@ -126,7 +146,7 @@ export default {
       return Number.parseFloat(somma / this.NUMSTUDENTI).toPrecision(4);
     },
 
-    scartoStud: function() {
+    scartoStud: function () {
       var i, somma;
       somma = 0;
 
@@ -141,7 +161,7 @@ export default {
       );
     },
 
-    delta: function() {
+    delta: function () {
       var delta, i;
       delta = 0;
       for (i = 0; i < this.NUMSTUDENTI; i++) {
@@ -150,13 +170,13 @@ export default {
       return Number.parseFloat(delta).toPrecision(4);
     },
 
-    deltaR: function() {
+    deltaR: function () {
       return Number.parseFloat(
         Math.sqrt(this.delta / this.NUMSTUDENTI)
       ).toPrecision(4);
     },
 
-    sumK: function() {
+    sumK: function () {
       var i, sumK;
       sumK = 0;
 
@@ -168,7 +188,7 @@ export default {
       );
     },
 
-    sumJ: function() {
+    sumJ: function () {
       var i, sumJ;
       sumJ = 0;
 
@@ -178,10 +198,10 @@ export default {
       return Number.parseFloat(Math.sqrt(sumJ / this.NUMSTUDENTI)).toPrecision(
         4
       );
-    }
+    },
   },
 
-  data: function() {
+  data: function () {
     return {
       value1: false,
       value2: false,
@@ -195,54 +215,44 @@ export default {
           type: "scatter",
           name: "Team A",
           marker: {
-            color: "#409EFF"
-          }
-        }
+            color: "#409EFF",
+          },
+        },
       ],
 
       layoutKJ: {
-        title: "Scatter chart of the space K,J distribuition",
+        title: "(KP,JP) Distribution",
         hoverlabel: {
-          bgcolor: "#FFF"
+          bgcolor: "#FFF",
         },
         xaxis: {
-          title: "K",
-          range: [0.1, 10.2]
+          title: "KP",
+          range: [0.1, 10.2],
         },
         yaxis: {
-          title: "J",
-          range: [-0.1, 1.1]
+          title: "JP",
+          range: [-0.1, 1.1],
         },
         height: 400,
-        width: 400
+        width: 400,
       },
 
       dataDev: [
         {
-          x: ["0", "1", "2", "3", "4+"],
-          y: [],
-          marker: {
-            color: "#409EFF"
-          },
-          name: "Dev distribuition",
-          type: "bar"
-        }
+          values: [],
+          labels: ["Dev(0 - 0,99): ", "Dev(1 - 1,99):", "Dev(2 - 2,99):", "Dev(3 - 3,99):", "Dev(4 - +inf):"],
+          type: "pie",
+          textinfo: "label+percent",
+          textposition: "outside",
+          automargin: true,
+        },
       ],
 
       layoutDev: {
-        title: "Dev peers distribuition",
-        hoverlabel: {
-          bgcolor: "#FFF"
-        },
-        xaxis: {
-          title: "Dev",
-          type: "category"
-        },
-        yaxis: {
-          title: "Frequency"
-        },
+        title: "Grades RMSD Distribution",
         height: 400,
-        width: 400
+        width: 400,
+        showlegend: false,
       },
 
       dataK: [
@@ -251,10 +261,10 @@ export default {
           y: [],
           name: "",
           marker: {
-            color: "#409EFF"
+            color: "#409EFF",
           },
-          type: "bar"
-        }
+          type: "bar",
+        },
       ],
 
       dataKT: [
@@ -263,40 +273,42 @@ export default {
           y: [],
           name: "",
           marker: {
-            color: "#409EFF"
+            color: "#409EFF",
           },
-          type: "bar"
-        }
+          type: "bar",
+        },
       ],
 
       layoutK: {
-        title: "Peer assessment distribuition",
+        title: "Peer Assessment Distribution",
         hoverlabel: {
-          bgcolor: "#FFF"
+          bgcolor: "#FFF",
         },
         xaxis: {
-          title: "K"
+          title: "Peer Assessment (KP)",
         },
         yaxis: {
-          title: "Frequency"
+          title: "Frequency",
+          range: [0, 500],
         },
         height: 400,
-        width: 400
+        width: 400,
       },
 
       layoutKT: {
-        title: "Teacher Real Grades",
+        title: "Teacher Grades Distribution",
         hoverlabel: {
-          bgcolor: "#FFF"
+          bgcolor: "#FFF",
         },
         xaxis: {
-          title: "KT"
+          title: "Teacher’s Grades (KR)",
         },
         yaxis: {
-          title: "Frequency"
+          title: "Frequency",
+          range: [0, 500],
         },
         height: 400,
-        width: 400
+        width: 400,
       },
 
       dataPT: [
@@ -306,22 +318,22 @@ export default {
           name: "Distance ",
           type: "scatter",
           mode: "markers",
-          marker: { color: "#409EFF" }
-        }
+          marker: { color: "#409EFF" },
+        },
       ],
 
       layoutPT: {
-        title: "Peers vs Teacher",
+        title: "KP Vs. KT Grades Distance",
         hoverlabel: {
-          bgcolor: "#FFF"
+          bgcolor: "#FFF",
         },
         xaxis: {
-          title: "Student"
+          title: "Students",
         },
         yaxis: {
-          title: "Distance",
-          range: [0, 10]
-        }
+          title: "JP",
+          range: [0, 10],
+        },
       },
 
       dataKJDev: [
@@ -337,39 +349,39 @@ export default {
             color: "#409EFF",
             line: {
               color: "white",
-              width: 0.5
-            }
+              width: 0.5,
+            },
           },
-          type: "scatter3d"
-        }
+          type: "scatter3d",
+        },
       ],
 
       layoutKJdev: {
         title: "K,J,Dev Space",
         hoverlabel: {
-          bgcolor: "#FFF"
+          bgcolor: "#FFF",
         },
         scene: {
           xaxis: {
             title: "K",
-            range: [1, 10]
+            range: [1, 10],
           },
           yaxis: {
             title: "J",
-            range: [0, 1]
+            range: [0, 1],
           },
           zaxis: {
-            title: "Dev"
-          }
+            title: "Dev",
+          },
         },
         height: 800,
-        width: 800
-      }
+        width: 800,
+      },
     }; //return
   }, //data
 
   methods: {
-    tredplot: function() {
+    tredplot: function () {
       if (this.value1) {
         this.loading = true;
         setTimeout(() => {
@@ -383,14 +395,14 @@ export default {
           this.loading = false;
         }, 500);
       }
-    }
+    },
   },
 
-  created: function() {
+  created: function () {
     var i;
     var sommaK = [];
     var sommaDev = [];
-    var sommaKT =[];
+    var sommaKT = [];
 
     for (i = 0; i < 10; i++) sommaK.push(0);
     for (i = 0; i < 10; i++) sommaKT.push(0);
@@ -426,14 +438,22 @@ export default {
 
       // --------------------------- KT -----------------------------------------
       if (this.TeacherGrades[i] > 0 && this.TeacherGrades[i] < 2) sommaKT[0]++;
-      else if (this.TeacherGrades[i] >= 2 && this.TeacherGrades[i] < 3) sommaKT[1]++;
-      else if (this.TeacherGrades[i] >= 3 && this.TeacherGrades[i] < 4) sommaKT[2]++;
-      else if (this.TeacherGrades[i] >= 4 && this.TeacherGrades[i] < 5) sommaKT[3]++;
-      else if (this.TeacherGrades[i] >= 5 && this.TeacherGrades[i] < 6) sommaKT[4]++;
-      else if (this.TeacherGrades[i] >= 6 && this.TeacherGrades[i] < 7) sommaKT[5]++;
-      else if (this.TeacherGrades[i] >= 7 && this.TeacherGrades[i] < 8) sommaKT[6]++;
-      else if (this.TeacherGrades[i] >= 8 && this.TeacherGrades[i] < 9) sommaKT[7]++;
-      else if (this.TeacherGrades[i] >= 9 && this.TeacherGrades[i] < 10) sommaKT[8]++;
+      else if (this.TeacherGrades[i] >= 2 && this.TeacherGrades[i] < 3)
+        sommaKT[1]++;
+      else if (this.TeacherGrades[i] >= 3 && this.TeacherGrades[i] < 4)
+        sommaKT[2]++;
+      else if (this.TeacherGrades[i] >= 4 && this.TeacherGrades[i] < 5)
+        sommaKT[3]++;
+      else if (this.TeacherGrades[i] >= 5 && this.TeacherGrades[i] < 6)
+        sommaKT[4]++;
+      else if (this.TeacherGrades[i] >= 6 && this.TeacherGrades[i] < 7)
+        sommaKT[5]++;
+      else if (this.TeacherGrades[i] >= 7 && this.TeacherGrades[i] < 8)
+        sommaKT[6]++;
+      else if (this.TeacherGrades[i] >= 8 && this.TeacherGrades[i] < 9)
+        sommaKT[7]++;
+      else if (this.TeacherGrades[i] >= 9 && this.TeacherGrades[i] < 10)
+        sommaKT[8]++;
       else sommaKT[9]++;
 
       // --------------------------- Dev -----------------------------------------
@@ -446,10 +466,10 @@ export default {
 
     this.dataK[0].y = JSON.parse(JSON.stringify(sommaK));
     this.dataKT[0].y = JSON.parse(JSON.stringify(sommaKT));
-    this.dataDev[0].y = JSON.parse(JSON.stringify(sommaDev));
+    this.dataDev[0].values = JSON.parse(JSON.stringify(sommaDev));
 
     console.log(this.dataKT);
-  }
+  },
 };
 </script>
 
