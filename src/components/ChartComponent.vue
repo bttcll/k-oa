@@ -220,16 +220,23 @@ export default {
           type: "indicator",
           mode: "gauge+number+delta",
           value: 0,
+          delta: { reference: 1 },
           gauge: {
-            axis: { range: [0, 1], tickwidth: 1, tickcolor: "darkblue" },
-            bar: { color: "darkblue" },
+            axis: { range: [0, 5], tickwidth: 1, tickcolor: "darkblue" },
+            bar: { color: "#409EFF" },
             bgcolor: "white",
             borderwidth: 2,
             bordercolor: "gray",
             steps: [
-              { range: [0, 0.5], color: "cyan" },
-              { range: [0.5, 1], color: "#409EFF" },
+              { range: [0, 1], color: "#67C23A5C" },
+              { range: [1, 3.5], color: "#E6A23C40" },
+              { range: [3.5, 5], color: "#F56C6C42" },
             ],
+            threshold: {
+              line: { color: "red", width: 4 },
+              thickness: 0.75,
+              value: 4.8,
+            },
           },
         },
       ],
@@ -283,6 +290,12 @@ export default {
           type: "pie",
           textinfo: "label+percent",
           textposition: "outside",
+          hoverlabel: {
+            bgcolor: "white",
+          },
+          marker: {
+            colors: ["#909399", "#409EFF", "#67C23A", "#E6A23C", "#F56C6C"],
+          },
           automargin: true,
         },
       ],
@@ -508,7 +521,7 @@ export default {
     this.dataDev[0].values = JSON.parse(JSON.stringify(sommaDev));
     this.dataDelta[0].value = this.deltaR;
 
-    console.log(this.dataKT);
+    // console.log(this.dataKT);
   },
 };
 </script>
