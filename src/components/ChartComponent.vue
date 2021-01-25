@@ -76,11 +76,19 @@
                 :display-mode-bar="false"
               />
             </td>
-
+          </tr>
+          <tr>
             <td>
               <Plotly
                 :data="dataDev"
                 :layout="layoutDev"
+                :display-mode-bar="false"
+              />
+            </td>
+            <td>
+              <Plotly
+                :data="dataDelta"
+                :layout="layoutDelta"
                 :display-mode-bar="false"
               />
             </td>
@@ -207,6 +215,31 @@ export default {
       value2: false,
       loading: false,
 
+      dataDelta: [
+        {
+          type: "indicator",
+          mode: "gauge+number+delta",
+          value: 0,
+          gauge: {
+            axis: { range: [0, 1], tickwidth: 1, tickcolor: "darkblue" },
+            bar: { color: "darkblue" },
+            bgcolor: "white",
+            borderwidth: 2,
+            bordercolor: "gray",
+            steps: [
+              { range: [0, 0.5], color: "cyan" },
+              { range: [0.5, 1], color: "#409EFF" },
+            ],
+          },
+        },
+      ],
+
+      layoutDelta: {
+        title: "KP Vs. KT Delta Indicator",
+        width: 400,
+        height: 400,
+      },
+
       dataKJ: [
         {
           x: [],
@@ -240,7 +273,13 @@ export default {
       dataDev: [
         {
           values: [],
-          labels: ["Dev(0 - 0,99): ", "Dev(1 - 1,99):", "Dev(2 - 2,99):", "Dev(3 - 3,99):", "Dev(4 - +inf):"],
+          labels: [
+            "Dev(0 - 0,99): ",
+            "Dev(1 - 1,99):",
+            "Dev(2 - 2,99):",
+            "Dev(3 - 3,99):",
+            "Dev(4 - +inf):",
+          ],
           type: "pie",
           textinfo: "label+percent",
           textposition: "outside",
@@ -467,6 +506,7 @@ export default {
     this.dataK[0].y = JSON.parse(JSON.stringify(sommaK));
     this.dataKT[0].y = JSON.parse(JSON.stringify(sommaKT));
     this.dataDev[0].values = JSON.parse(JSON.stringify(sommaDev));
+    this.dataDelta[0].value = this.deltaR;
 
     console.log(this.dataKT);
   },
