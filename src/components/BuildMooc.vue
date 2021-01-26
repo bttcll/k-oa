@@ -139,9 +139,6 @@
           </template>
 
           <el-form label-position="left" label-width="150px">
-            <el-form-item label="Seed: ">
-              <el-input-number v-model="seme" :step="1000" />
-            </el-form-item>
             <el-form-item label="Average: ">
               <el-input-number
                 v-model="media"
@@ -185,7 +182,6 @@ export default {
       gradesNumber: 0,
       alfa: 0.1,
       media: 5.5,
-      seme: -1000,
       varianza: 2,
       kValue: [1, 10],
       marks: {
@@ -246,7 +242,6 @@ export default {
         // functionN: 6,
         NumSt: this.studentsNumber,
         media: this.media,
-        seme: this.seme,
         varianza: this.varianza,
         min: this.kValue[0],
         max: this.kValue[1],

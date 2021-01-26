@@ -167,7 +167,7 @@ export default new Vuex.Store({
         GeneraMatriceAdiacenza: (state, c) => GeneraMatriceAdiacenza(state, c.NumSt, c.Voti, c.file, c.alfa, c.min, c.max),
         RiempiGrafo: (state, c) => RiempiGrafo(state, c.file),
         Teacher: (state, c) => Teacher(state, c.studente, c.voto),
-        Gauss: (state, c) => Gauss(state, c.seme, c.NumSt, c.media, c.varianza, c.min, c.max),
+        Gauss: (state, c) => Gauss(state, c.NumSt, c.media, c.varianza, c.min, c.max),
         InitializeStudentModelByTeacher: (state, c) => InitializeStudentModelByTeacher(state, c.delta),
         AssignRealGrade: (state, c) => AssignRealGrade(state, c.n),
         Knn: (state) => Knn(state)
@@ -712,19 +712,17 @@ function InizializzaTuttiDev(state) {
     return;
 }
 
-function Gauss(state, lseed, numGen, mediaInput, varianzaInput, votoInf, votoSup) {
+function Gauss(state, numGen, mediaInput, varianzaInput, votoInf, votoSup) {
 
     let FileSaver = require('file-saver');
     let fp = "";
     let p, j, m;
     let voti = [];
-    const l = { seed: 0 };
-    l.seed = lseed;
 
     //generaRand(voti,numGen,votoInf,votoSup);
     //system("pause");
     for (let i = 0; i < numGen; i++) {
-        p = gasdev(l);
+        p = randn_bm();
         voti[i] = (varianzaInput * p + mediaInput);
         // arrotondamento a 0.5
         j = parseInt(voti[i]); // per difetto
@@ -734,7 +732,7 @@ function Gauss(state, lseed, numGen, mediaInput, varianzaInput, votoInf, votoSup
         else
             voti[i] = m;
         while (voti[i] > (votoSup) || voti[i] < votoInf) {
-            voti[i] = varianzaInput * gasdev(l) + mediaInput;
+            voti[i] = varianzaInput * randn_bm() + mediaInput;
             j = parseInt(voti[i]); // per difetto
             m = j + 1;
             if (voti[i] <= j + 0.5)
@@ -761,29 +759,13 @@ function Gauss(state, lseed, numGen, mediaInput, varianzaInput, votoInf, votoSup
 
     return;
 }
-function gasdev(l) {
 
-    let iset = 0;
-    let gset;
-    let fac, rsq, v1, v2;
-
-    if (l.seed < 0) iset = 0;
-    if (iset == 0) {
-        do {
-            l.seed = Math.random() * (Math.random() < 0.5 ? -1 : 1);
-            v1 = 2.0 * l.seed - 1.0;
-            l.seed = Math.random() * (Math.random() < 0.5 ? -1 : 1);
-            v2 = 2.0 * l.seed - 1.0;
-            rsq = v1 * v1 + v2 * v2;
-        } while (rsq >= 1.0 || rsq == 0.0);
-        fac = Math.sqrt(-2.0 * Math.log(rsq) / rsq);
-        gset = v1 * fac;
-        iset = 1;
-        return v2 * fac;
-    } else {
-        iset = 0;
-        return gset;
-    }
+// Standard Normal variate using Box-Muller transform.
+function randn_bm() {
+    let u = 0, v = 0;
+    while(u === 0) u = Math.random(); //Converting [0,1) to (0,1)
+    while(v === 0) v = Math.random();
+    return Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
 }
 
 function InitializeStudentModelByTeacher(state, delta) {
