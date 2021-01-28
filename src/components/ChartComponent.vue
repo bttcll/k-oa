@@ -294,7 +294,7 @@ export default {
             bgcolor: "white",
           },
           marker: {
-            colors: ["#909399", "#409EFF", "#67C23A", "#E6A23C", "#F56C6C"],
+            colors: ["#409EFF", "#67C23A", "#E6A23C", "#F56C6C", "#909399"],
           },
           automargin: true,
         },
@@ -477,7 +477,7 @@ export default {
       this.dataPT[0].y.push(this.classe[i].delta);
 
       // --------------------------- K -----------------------------------------
-      if (this.classe[i].k > 0 && this.classe[i].k < 2) sommaK[0]++;
+      if (this.classe[i].k >= 0 && this.classe[i].k < 2) sommaK[0]++;
       else if (this.classe[i].k >= 2 && this.classe[i].k < 3) sommaK[1]++;
       else if (this.classe[i].k >= 3 && this.classe[i].k < 4) sommaK[2]++;
       else if (this.classe[i].k >= 4 && this.classe[i].k < 5) sommaK[3]++;
@@ -489,7 +489,7 @@ export default {
       else sommaK[9]++;
 
       // --------------------------- KT -----------------------------------------
-      if (this.TeacherGrades[i] > 0 && this.TeacherGrades[i] < 2) sommaKT[0]++;
+      if (this.TeacherGrades[i] >= 0 && this.TeacherGrades[i] < 2) sommaKT[0]++;
       else if (this.TeacherGrades[i] >= 2 && this.TeacherGrades[i] < 3)
         sommaKT[1]++;
       else if (this.TeacherGrades[i] >= 3 && this.TeacherGrades[i] < 4)
@@ -509,16 +509,23 @@ export default {
       else sommaKT[9]++;
 
       // --------------------------- Dev -----------------------------------------
-      if (this.classe[i].dev > 0 && this.classe[i].dev < 1) sommaDev[0]++;
-      else if (this.classe[i].dev >= 1 && this.classe[i].dev < 2) sommaDev[1]++;
-      else if (this.classe[i].dev >= 2 && this.classe[i].dev < 3) sommaDev[2]++;
-      else if (this.classe[i].dev >= 3 && this.classe[i].dev < 4) sommaDev[3]++;
-      else sommaDev[4]++;
+      if (this.classe[i].dev >= 0.0 && this.classe[i].dev < 1.0) {
+        sommaDev[0]++;
+      } else if (this.classe[i].dev >= 1.0 && this.classe[i].dev < 2.0) {
+        sommaDev[1]++;
+      } else if (this.classe[i].dev >= 2.0 && this.classe[i].dev < 3.0) {
+        sommaDev[2]++;
+      } else if (this.classe[i].dev >= 3.0 && this.classe[i].dev < 4.0) {
+        sommaDev[3]++;
+      } else {
+        sommaDev[4]++;
+      }
     }
 
     this.dataK[0].y = JSON.parse(JSON.stringify(sommaK));
     this.dataKT[0].y = JSON.parse(JSON.stringify(sommaKT));
     this.dataDev[0].values = JSON.parse(JSON.stringify(sommaDev));
+    console.log(this.dataDev[0].values);
     this.dataDelta[0].value = this.deltaR;
 
     // console.log(this.dataKT);
