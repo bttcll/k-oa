@@ -341,7 +341,7 @@ export default {
         },
         yaxis: {
           title: "Frequency",
-          range: [0, 500],
+          range: [0, 1],
         },
         height: 400,
         width: 400,
@@ -357,7 +357,7 @@ export default {
         },
         yaxis: {
           title: "Frequency",
-          range: [0, 500],
+          range: [0, 1],
         },
         height: 400,
         width: 400,
@@ -527,6 +527,10 @@ export default {
     this.dataDev[0].values = JSON.parse(JSON.stringify(sommaDev));
     console.log(this.dataDev[0].values);
     this.dataDelta[0].value = this.deltaR;
+
+    // limite asse y dinamico
+    this.layoutK.yaxis.range[1] = this.NUMSTUDENTI;
+    this.layoutKT.yaxis.range[1] = this.NUMSTUDENTI;
 
     // console.log(this.dataKT);
   },
