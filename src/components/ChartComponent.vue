@@ -11,7 +11,7 @@
           <Plotly
             :data="dataKJDev"
             :layout="layoutKJdev"
-            :display-mode-bar="false"
+            :display-mode-bar="true"
           />
         </div>
 
@@ -54,14 +54,14 @@
               <Plotly
                 :data="dataK"
                 :layout="layoutK"
-                :display-mode-bar="false"
+                :display-mode-bar="true"
               />
             </td>
             <td>
               <Plotly
                 :data="dataKT"
                 :layout="layoutKT"
-                :display-mode-bar="false"
+                :display-mode-bar="true"
               />
             </td>
           </tr>
@@ -70,7 +70,7 @@
               <Plotly
                 :data="dataKJ"
                 :layout="layoutKJ"
-                :display-mode-bar="false"
+                :display-mode-bar="true"
               />
             </td>
           </tr>
@@ -79,24 +79,24 @@
               <Plotly
                 :data="dataDev"
                 :layout="layoutDev"
-                :display-mode-bar="false"
+                :display-mode-bar="true"
               />
             </td>
             <!-- <td>
               <Plotly
                 :data="dataDelta"
                 :layout="layoutDelta"
-                :display-mode-bar="false"
+                :display-mode-bar="true"
               />
             </td> -->
             <td>
-              <Plotly :data="dataDeltaFix" :display-mode-bar="false" />
+              <Plotly :data="dataDeltaFix" :display-mode-bar="true" />
             </td>
           </tr>
         </table>
       </div>
 
-      <Plotly :data="dataPT" :layout="layoutPT" :display-mode-bar="false" />
+      <Plotly :data="dataPT" :layout="layoutPT" :display-mode-bar="true" />
     </el-main>
   </div>
 </template>
@@ -217,7 +217,7 @@ export default {
 
       dataDeltaFix: [
         {
-          x: ["KP Vs. KT Delta Indicator"],
+          x: ["KP Vs. KR Delta Indicator"],
           y: [0],
           type: "bar",
           width: [0.04],
@@ -384,7 +384,7 @@ export default {
       ],
 
       layoutPT: {
-        title: "KP Vs. KT Grades Distance",
+        title: "KP Vs. KR Grades Distance",
         hoverlabel: {
           bgcolor: "#FFF",
         },
@@ -392,7 +392,7 @@ export default {
           title: "Students",
         },
         yaxis: {
-          title: "JP",
+          title: "Distance",
           range: [0, 10],
         },
         height: 400,

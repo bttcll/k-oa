@@ -19,13 +19,13 @@
 
       <br />
 
-      <Plotly :data="dataKJ" :layout="layoutKJ" :display-mode-bar="false" />
-      <Plotly :data="dataPT" :layout="layoutPT" :display-mode-bar="false" />
+      <Plotly :data="dataKJ" :layout="layoutKJ" :display-mode-bar="true" />
+      <Plotly :data="dataPT" :layout="layoutPT" :display-mode-bar="true" />
       <div align="center">
         <Plotly
           :data="dataKJDev"
           :layout="layoutKJdev"
-          :display-mode-bar="false"
+          :display-mode-bar="true"
         />
       </div>
     </el-main>
