@@ -435,7 +435,7 @@ function InizializzaK(state, index) {
     }
 
     // ritorna il voto medio dello studente dopo il peer-assessment
-    return (somma / state.NUMSTUDENTIVOTATI);
+    return parseFloat(somma / state.NUMSTUDENTIVOTATI);
 }
 
 function InizializzaDev(state, index) {
