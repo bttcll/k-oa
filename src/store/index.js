@@ -334,7 +334,8 @@ function RiempiGrafo(state, FILE) {
 
         for (j = 0; j < state.NUMSTUDENTI; j++) {
 
-            state.Grafo[i][j] = parseInt(state.Grafo[i][j]);
+            state.Grafo[i][j] = parseFloat(state.Grafo[i][j]);
+            // state.Grafo[i][j] = parseInt(state.Grafo[i][j]);
         }
 
         state.cont[i] = 0;
