@@ -17,7 +17,7 @@
 
         <table v-if="!value2">
           <tr>
-            <td>
+            <!-- <td>
               <el-card class="box-card" shadow="hover">
                 <div slot="header" class="clearfix">
                   <big>Some stats</big>
@@ -37,8 +37,6 @@
                     <br />
                     <li>StudentsDifference: {{ scartoStud }}</li>
                     <br />
-                    <!-- <li>Delta: {{delta}} </li><br /> -->
-                    <!-- <li>Delta Peers-Teacher real: {{deltaR}} </li> -->
                     <li>Delta: {{ deltaR }}</li>
                   </ul>
 
@@ -50,7 +48,7 @@
                   </ul>
                 </div>
               </el-card>
-            </td>
+            </td> -->
 
             <td>
               <Plotly
@@ -59,9 +57,6 @@
                 :display-mode-bar="false"
               />
             </td>
-          </tr>
-
-          <tr>
             <td>
               <Plotly
                 :data="dataKT"
@@ -69,7 +64,9 @@
                 :display-mode-bar="false"
               />
             </td>
-            <td>
+          </tr>
+          <tr>
+            <td colspan="2">
               <Plotly
                 :data="dataKJ"
                 :layout="layoutKJ"
@@ -85,12 +82,15 @@
                 :display-mode-bar="false"
               />
             </td>
-            <td>
+            <!-- <td>
               <Plotly
                 :data="dataDelta"
                 :layout="layoutDelta"
                 :display-mode-bar="false"
               />
+            </td> -->
+            <td>
+              <Plotly :data="dataDeltaFix" :display-mode-bar="false" />
             </td>
           </tr>
         </table>
@@ -215,6 +215,15 @@ export default {
       value2: false,
       loading: false,
 
+      dataDeltaFix: [
+        {
+          x: ["KP Vs. KT Delta Indicator"],
+          y: [0],
+          type: "bar",
+          width: [0.04],
+        },
+      ],
+
       dataDelta: [
         {
           type: "indicator",
@@ -274,22 +283,22 @@ export default {
           range: [-0.1, 1.1],
         },
         height: 400,
-        width: 400,
+        width: 1200,
       },
 
       dataDev: [
         {
           values: [],
           labels: [
-            "Dev(0 - 0,99): ",
-            "Dev(1 - 1,99):",
-            "Dev(2 - 2,99):",
-            "Dev(3 - 3,99):",
-            "Dev(4 - +inf):",
+            "Dev = [0,1)",
+            "Dev = [1,2)",
+            "Dev = [2,3)",
+            "Dev = [3,4)",
+            "Dev = [4,+∞)",
           ],
           type: "pie",
-          textinfo: "label+percent",
-          textposition: "outside",
+          // textinfo: "label+percent",
+          // textposition: "outside",
           hoverlabel: {
             bgcolor: "white",
           },
@@ -302,9 +311,9 @@ export default {
 
       layoutDev: {
         title: "Grades RMSD Distribution",
-        height: 400,
-        width: 400,
-        showlegend: false,
+        height: 600,
+        width: 600,
+        // showlegend: false,
       },
 
       dataK: [
@@ -343,8 +352,8 @@ export default {
           title: "Frequency",
           range: [0, 1],
         },
-        height: 400,
-        width: 400,
+        height: 600,
+        width: 500,
       },
 
       layoutKT: {
@@ -359,8 +368,8 @@ export default {
           title: "Frequency",
           range: [0, 1],
         },
-        height: 400,
-        width: 400,
+        height: 600,
+        width: 500,
       },
 
       dataPT: [
@@ -386,6 +395,8 @@ export default {
           title: "JP",
           range: [0, 10],
         },
+        height: 400,
+        width: 1200,
       },
 
       dataKJDev: [
@@ -527,6 +538,7 @@ export default {
     this.dataDev[0].values = JSON.parse(JSON.stringify(sommaDev));
     console.log(this.dataDev[0].values);
     this.dataDelta[0].value = this.deltaR;
+    this.dataDeltaFix[0].y[0] = this.deltaR;
 
     // limite asse y dinamico
     this.layoutK.yaxis.range[1] = this.NUMSTUDENTI;
