@@ -12,7 +12,7 @@ export default {
   name: "header-component",
   data: function() {
     return {
-      titolo: "K-OpenAnswer System"
+      titolo: "K-OpenAnswer"
     };
   }
 };

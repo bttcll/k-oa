@@ -2,29 +2,29 @@
   <div>
     <el-main>
       <div>
-        <h1 class="titolo">The moocs simulation system</h1>
+        <h1 class="titolo">Teaching Analytics Platform</h1>
       </div>
       <br />
       <p></p>
 
       <el-steps :active="active" finish-status="success">
-        <el-step title="Step 1" description="Build MOOC"></el-step>
-        <el-step title="Step 2" description="Load MOOC"></el-step>
+        <el-step title="Step 1" description="Build & Save  a new MOOC"></el-step>
+        <el-step title="Step 2" description="Load an old MOOC"></el-step>
         <el-step title="Step 3" description="Teacher Grading"></el-step>
-        <el-step title="Step 4" description="k-NN"></el-step>
+        <el-step title="Step 4" description="MOOC's Learning"></el-step>
       </el-steps>
 
       <el-divider></el-divider>
 
       <table align="center">
         <caption>
-          <p>STUDENTS COMMUNITY</p>
+          <h1 class="titolo">The community</h1>
         </caption>
         <tr>
           <td>
             <el-card class="box-card" shadow="hover">
               <div class="text item">
-                <h1>Students number</h1>
+                <h1># Learners</h1>
                 <h2>{{ NUMSTUDENTI }}</h2>
               </div>
             </el-card>
@@ -33,7 +33,7 @@
           <td>
             <el-card class="box-card" shadow="hover">
               <div class="text item">
-                <h1>Peer assessments</h1>
+                <h1># Peers' Assessments</h1>
                 <h2>{{ NUMSTUDENTIVOTATI }}</h2>
               </div>
             </el-card>

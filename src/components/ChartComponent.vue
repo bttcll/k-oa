@@ -217,7 +217,7 @@ export default {
 
       dataDeltaFix: [
         {
-          x: ["KP Vs. KR Delta Indicator"],
+          x: ["KP Vs. KR"],
           y: [0],
           type: "bar",
           width: [0.04],
@@ -310,7 +310,7 @@ export default {
       ],
 
       layoutDev: {
-        title: "Grades RMSD Distribution",
+        title: "RMSE",
         height: 600,
         width: 600,
         // showlegend: false,
@@ -341,12 +341,12 @@ export default {
       ],
 
       layoutK: {
-        title: "Peer Assessment Distribution",
+        title: "Peer Assessments Distribution",
         hoverlabel: {
           bgcolor: "#FFF",
         },
         xaxis: {
-          title: "Peer Assessment (KP)",
+          title: "Peer Assessments (KP)",
         },
         yaxis: {
           title: "Frequency",
@@ -357,7 +357,7 @@ export default {
       },
 
       layoutKT: {
-        title: "Teacher Grades Distribution",
+        title: "Teacher's Grades Distribution",
         hoverlabel: {
           bgcolor: "#FFF",
         },

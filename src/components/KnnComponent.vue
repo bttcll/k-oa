@@ -2,12 +2,12 @@
   <div>
     <el-main>
       <p>
-        K-NN. This module is launched and all the SMs are modified changing
-        their positions in the (K,J) space;
+        K-NN Learning. All the Student Models are modified changing
+        their positions in the (KP,JP) space;
       </p>
 
       <el-card class="box-card" shadow="never">
-        Start k-nearest neighbors algorithm
+        Start Learning
         <el-button
           type="success"
           icon="el-icon-check"

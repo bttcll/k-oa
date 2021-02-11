@@ -16,6 +16,7 @@
     "core-js": "^3.6.4",
     "element-ui": "^2.4.5",
     "file-saver": "^2.0.2",
+    "msgpack-lite": "^0.1.26",
     "vue": "^2.6.11",
     "vue-data-tables": "^3.4.5",
     "vue-plotly": "^1.1.0",

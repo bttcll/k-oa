@@ -4,12 +4,12 @@
       <p>
         This module allows to export some
         MOOC variables by txt and CSV files. In particular, one can export all
-        the SMs, i.e., K, J and DEV together with other variables,
+        the SMs, i.e., KP, JP and DEV together with other variables,
         in group or separated. Thanks to this function, one can check
         the MOOC dynamic by statistical programs like the R program
-        allowing for a more in-depth study as well. Moreover this module can exports the MOOC’s graphs
+        allowing for a more in-depth study as well. Moreover this module can exports the MOOC’s graph
         into a dot format, ready to be visualized by the Graphvitz
-        Grafo visualization environment.
+        visualization environment.
       </p>
 
       <el-card class="box-card" shadow="hover">

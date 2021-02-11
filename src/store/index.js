@@ -239,14 +239,18 @@ function GeneraMatriceAdiacenza(state, NumSt, Voti, FILE, alfa, min, max) {
     for (let i = 0; i < NumSt; i++) {
 
         let KTi = kTapp[i];
-
+		//console.log(KTi);
+		//console.log(alfa);
         for (let j = 0; j < Voti; j++) {
 
             //assegnazione del voto ricevuto da p
             p = (1 + j + i) % NumSt;
 
             let KTj = kTapp[p];
+			//console.log(KTj);console.log(KTj);
+			
             n = votoInt(KTi, KTj, alfa, min, max);
+			//console.log(n);
 
             Grafo[i][p] = n;
         }
@@ -285,9 +289,12 @@ function votoInt(KTi, KTj, alfa, min, max) {
 
     const beta = Math.random();
     const KMAX = max;
-    const J = KTi * alfa;
-
-    // console.log("KTi: " + KTi);
+    const J = ((KTi-min)/(max-min)) * alfa;
+	
+	//console.log("MIN=" + min);
+	//console.log("MAX=" + max);
+   console.log("J=" + J);
+	console.log("KTi=" + KTi);
 
     const kP = parseInt(KTj + beta * (KMAX - KTj) * (1 - J));
 

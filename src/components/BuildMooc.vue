@@ -2,7 +2,7 @@
   <div>
     <el-main v-loading="loading" element-loading-text="Loading...">
       <p>
-        Here a new MOOC can be build. The user is requested to input the number
+        Here a new community can be built. The user is requested to input the number
         of students and the number of peer assessments for each of them. Here a
         MOOC is represented by a direct and weighed graph where each node
         represents a student and each edge’s weight is the grade assigned by the
@@ -15,10 +15,10 @@
         The “Generate Gauss grades” function generates a Gauss distribution of
         grades. First the user has to set the number of learners and secondly
         the mean µ and the variance σ of the normal distribution associated to
-        the MOOC.
+        the community.
       </p>
       <el-alert
-        title="To select the download folder and rename the mooc file, make sure you have activated the correct option of your browser"
+        title="To select the download folder and rename the mooc file, make sure you have activated the browser correct option "
         type="info"
         show-icon
         :closable="false"
@@ -52,8 +52,7 @@
         <el-collapse-item name="1">
           <template slot="title">
             <h4>
-              <i class="el-icon-star-off" /> Generate Realgrade Distribution
-              (new)
+              <i class="el-icon-star-off" /> Generate a new learning community
             </h4>
           </template>
 
@@ -77,11 +76,13 @@
               />
             </el-form-item>
 
-            <el-form-item label="Alfa: ">
+            <el-form-item label="Alpha: ">
               <el-input-number
                 v-model="alfa"
                 :precision="2"
                 :step="0.1"
+				:min="0"
+                :max="1"
                 :disabled="sceltoGauss"
               />
             </el-form-item>
@@ -105,7 +106,7 @@
                 size="medium"
                 @click="(dialogVisible = true), (sceltoGauss = true)"
                 plain
-                >Generate Gauss Grade</el-button
+                >Generate Gauss grades</el-button
               >
               <br />
               <input type="file" @change="loadTextFromFile" accept=".txt" />
@@ -130,26 +131,26 @@
         </el-collapse-item>
 
         <el-dialog
-          title="Generate Gauss Grade"
+          title="Generate Gaussian grades"
           :visible.sync="dialogVisible"
           width="30%"
         >
           <template slot="title">
-            <h4><i class="el-icon-data-analysis" /> Generate Gauss Grade</h4>
+            <h4><i class="el-icon-data-analysis" /> <center>Gaussian parameters</center></h4>
           </template>
 
           <el-form label-position="left" label-width="150px">
-            <el-form-item label="Average: ">
+            <el-form-item label="Mean: ">
               <el-input-number
                 v-model="media"
                 :precision="2"
-                :step="0.5"
+                :step="0.1"
                 :min="1"
                 :max="10"
               />
             </el-form-item>
             <el-form-item label="Variance: ">
-              <el-input-number v-model="varianza" :precision="2" :step="0.5" />
+              <el-input-number v-model="varianza" :precision="2" :step="0.1" />
             </el-form-item>
 
             <el-form-item>

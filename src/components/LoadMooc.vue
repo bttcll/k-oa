@@ -5,8 +5,8 @@
         This function load a MOOC from a file.
         <br />The file format is a text format representing the adjacency
         matrix of the MOOC.
-        <br />When loading the MOOC, for each
-        student the SM is created.
+        <br />When loading a MOOC, for each 
+        student the Student Model is created.
       </p>
 
       <el-card class="box-card" shadow="hover">

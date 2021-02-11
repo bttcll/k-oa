@@ -27,6 +27,11 @@
           <i class="el-icon-magic-stick" />
           <span>Build a new MOOC</span>
         </el-menu-item>
+		
+		<el-menu-item index="2" v-on:click="$emit('tabSelected', 'build-mooc')">
+          <i class="el-icon-magic-stick" />
+          <span>Start a PA Session</span>
+        </el-menu-item>
 
         <el-menu-item
           index="3"
