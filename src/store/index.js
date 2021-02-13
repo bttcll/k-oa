@@ -165,6 +165,7 @@ export default new Vuex.Store({
         },
         // state passa l'intero stato, c sono le variabili passate dai components
         GeneraMatriceAdiacenza: (state, c) => GeneraMatriceAdiacenza(state, c.NumSt, c.Voti, c.file, c.alfa, c.min, c.max),
+        GeneraMatriceAdiacenzaEmpty: (state, c) => GeneraMatriceAdiacenzaEmpty(state, c.NumSt, c.min, c.max),
         RiempiGrafo: (state, c) => RiempiGrafo(state, c.file),
         Teacher: (state, c) => Teacher(state, c.studente, c.voto),
         Gauss: (state, c) => Gauss(state, c.NumSt, c.media, c.varianza, c.min, c.max),
@@ -181,6 +182,65 @@ export default new Vuex.Store({
 // ----------------------------------- FUNZIONI ------------------------------------------
 // ---------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------
+
+function GeneraMatriceAdiacenzaEmpty(state, NumSt, min, max) {
+
+    //per il salvataggio su txt
+    let data = "";
+    let FileSaver = require('file-saver');
+
+    //per cicli for
+    let Grafo = [];
+    let kTapp = [];
+    let kT = 0;
+
+    //gestione array dinamico
+    for (let i = 0; i < NumSt; i++) {
+        Grafo[i] = [];
+        for (let j = 0; j < NumSt; j++) {
+            Grafo[i][j] = 0;
+        }
+    }
+
+    // salvo data per il file
+
+    data += NumSt + "\n"; // numero degli studenti
+    data += 0 + "\n"; // numero dei voti tra pari
+
+    // inseriamo in state alfa
+    // state.alfakT = alfa;
+    data += 0 + "\n";
+
+    // voti min e max
+    data += min + "\n";
+    data += max + "\n";
+
+    for (let i = 0; i < NumSt; i++) {
+            kT = IntCasuale(min, max);
+        // inserisco i voti del professore in un array di appoggio
+        kTapp.push(kT);
+    }
+
+    // Inserisco i voti del professore in base alla funzione richiamta
+
+    for (let i = 0; i < NumSt - 1; i++) {
+        data += kTapp[i] + " ";
+    }
+    data += kTapp[kTapp.length - 1];
+
+    //salvataggio del grafo
+    for (let i = 0; i < NumSt; i++)
+        data += "\n" + Grafo[i];
+
+    //salvo il file in locale
+    let blob = new Blob([data], {
+        type: "text/plain;charset=utf-8"
+    });
+    FileSaver.saveAs(blob, "mooc_" + NumSt + "_" + 0 + ".txt");
+
+    //this.download(data, 'mooc_00.txt', 'text/plain');
+    return;
+}
 
 function GeneraMatriceAdiacenza(state, NumSt, Voti, FILE, alfa, min, max) {
 
