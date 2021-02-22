@@ -95,7 +95,6 @@ export default {
 
   data: function () {
     return {
-      dialogVisible: false,
       activeName: "1",
       loading: false,
       studentsNumber: 0,
