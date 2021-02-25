@@ -2,9 +2,9 @@
   <div>
     <el-main v-loading="loading" element-loading-text="Loading...">
       <p>
-        Here a new community can be built. The user is requested to input the number
-        of students and the number of peer assessments for each of them. Here a
-        MOOC is represented by a direct and weighed graph where each node
+        Here a new community can be built. The user is requested to input the
+        number of students and the number of peer assessments for each of them.
+        Here a MOOC is represented by a direct and weighed graph where each node
         represents a student and each edge’s weight is the grade assigned by the
         student to her peers. The user can choose to let the system to
         completely simulate a peer evaluation: in this case a Gaussian grades
@@ -67,7 +67,7 @@
               />
             </el-form-item>
 
-            <el-form-item label="Peer assessments: ">
+            <el-form-item label="Peer assessments number: ">
               <el-input-number
                 v-model="gradesNumber"
                 :min="1"
@@ -81,7 +81,7 @@
                 v-model="alfa"
                 :precision="2"
                 :step="0.1"
-				:min="0"
+                :min="0"
                 :max="1"
                 :disabled="sceltoGauss"
               />
@@ -112,6 +112,18 @@
               <input type="file" @change="loadTextFromFile" accept=".txt" />
             </el-form-item>
 
+            <el-form-item label="Peer assessments mode: ">
+              <div>
+                <el-radio v-model="radio1" label="1" border
+                  >Circular <i class="el-icon-refresh"
+                /></el-radio>
+                <el-radio v-model="radio1" label="2" border
+                  >Random <i class="el-icon-connection"
+                /></el-radio>
+                <el-button @click="test"> test </el-button>
+              </div>
+            </el-form-item>
+
             <br />
 
             <el-form-item>
@@ -136,7 +148,10 @@
           width="30%"
         >
           <template slot="title">
-            <h4><i class="el-icon-data-analysis" /> <center>Gaussian parameters</center></h4>
+            <h4>
+              <i class="el-icon-data-analysis" />
+              <center>Gaussian parameters</center>
+            </h4>
           </template>
 
           <el-form label-position="left" label-width="150px">
@@ -175,6 +190,7 @@ export default {
 
   data: function () {
     return {
+      radio1: "1",
       sceltoGauss: false,
       dialogVisible: false,
       activeName: "1",
@@ -197,6 +213,69 @@ export default {
   methods: {
     //RICHIAMO FUNZIONI DALLO STATO
     ...mapMutations(["resetAll", "GeneraMatriceAdiacenza", "Gauss"]),
+
+    test: function () {
+      const MAXASS = 50;
+      let numeri = [nStudenti];
+      let numfreq = [nStudenti];
+      let out = [nStudenti * nAssessments];
+      let k, n, flag;
+      let nAssessments = this.gradesNumber;
+      let nStudenti = this.studentsNumber;
+
+      try {
+        while (nAssessments > nStudenti || nAssessments > MAXASS) {
+          console.log("Numero di Assessments troppo elevato!\n");
+        }
+        // riempi con i numeri interi delle posizioni nella matrice di adiacenza
+        for (let i = 0; i < nStudenti; i++) {
+          numeri[i] = i;
+        }
+        // NB max studenti 32000
+        k = 0;
+        for (let j = 0; j < nStudenti; j++) {
+          flag = 1;
+          for (let i = 0; i < nAssessments; i++) {
+            n = Math.floor((Math.random() * nStudenti));
+            while (flag == 1) {
+              console.log("passo\n");
+              flag = 0;
+              for (let y = 0; y < k; y++) {
+                if (n != out[y * nAssessments]) {
+                  flag = 0;
+                } else {
+                  flag = 1;
+                  n = Math.floor((Math.random() * nStudenti));
+                }
+              }
+            }
+
+            while (
+              numeri[n] == -1 ||
+              i == numeri[n] ||
+              numfreq[n] == nAssessments ||
+              flag == 1
+            )
+              //numero già preso
+              n = Math.floor((Math.random() * nStudenti));
+            out[k++] = numeri[n];
+            flag = 0;
+            numeri[n] = -1;
+            numfreq[n]++;
+          }
+          for (let i = 0; i < nStudenti; i++) {
+            numeri[i] = i;
+          }
+        }
+        for (let y = 0; y < nStudenti; y++) {
+          for (let i = 0; i < nAssessments; i++)
+            console.log(out[y + i * nStudenti]);
+          console.log("\n");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
 
     loadTextFromFile(ev) {
       const file = ev.target.files[0];
