@@ -217,60 +217,61 @@ export default {
     test: function () {
       const MAXASS = 50;
       let numeri = [nStudenti];
-      let numfreq = [nStudenti];
-      let out = [nStudenti * nAssessments];
-      let k, n, flag;
+      let n;
       let nAssessments = this.gradesNumber;
       let nStudenti = this.studentsNumber;
 
       try {
         while (nAssessments > nStudenti || nAssessments > MAXASS) {
-          console.log("Numero di Assessments troppo elevato!\n");
+          console.error("Numero di Assessments troppo elevato!\n");
+        }
+
+        let matrice = [];
+        // let matrice = [nStudenti][nAssessments];
+        for (let i = 0; i < nStudenti; i++) {
+          matrice[i] = [];
+          for (let j = 0; j < nAssessments; j++) {
+            matrice[i][j] = 0;
+          }
         }
         // riempi con i numeri interi delle posizioni nella matrice di adiacenza
         for (let i = 0; i < nStudenti; i++) {
           numeri[i] = i;
         }
-        // NB max studenti 32000
-        k = 0;
-        for (let j = 0; j < nStudenti; j++) {
-          flag = 1;
-          for (let i = 0; i < nAssessments; i++) {
-            n = Math.floor((Math.random() * nStudenti));
-            while (flag == 1) {
-              console.log("passo\n");
-              flag = 0;
-              for (let y = 0; y < k; y++) {
-                if (n != out[y * nAssessments]) {
-                  flag = 0;
-                } else {
-                  flag = 1;
-                  n = Math.floor((Math.random() * nStudenti));
-                }
-              }
-            }
 
-            while (
-              numeri[n] == -1 ||
-              i == numeri[n] ||
-              numfreq[n] == nAssessments ||
-              flag == 1
-            )
-              //numero già preso
-              n = Math.floor((Math.random() * nStudenti));
-            out[k++] = numeri[n];
-            flag = 0;
-            numeri[n] = -1;
-            numfreq[n]++;
-          }
+        // NB max studenti 32000
+        // srand(time(NULL));
+
+        for (let j = 0; j < nAssessments; j++) {
           for (let i = 0; i < nStudenti; i++) {
+            do {
+              n = Math.floor(Math.random() * nStudenti);
+              //printf("n=%d\n",n);
+              //printf("numeri[%d]=%d n=%d\n",i,numeri[i],n);
+
+              //system("pause");
+            } while (i == n || numeri[n] == -1);
+            matrice[i][j] = n;
+            //printf("passo\n");
+            numeri[n] = -1;
+          }
+
+          for (let i = 0; i < nStudenti; i++) {
+            //printf("%d\n",numeri[i]);
             numeri[i] = i;
           }
         }
+        // scrivi su file
+        //  printf("Nome del file:\n");
+        //  scanf("%s",nomeFile);
+        //  fp=fopen(nomeFile,"w+");
         for (let y = 0; y < nStudenti; y++) {
-          for (let i = 0; i < nAssessments; i++)
-            console.log(out[y + i * nStudenti]);
+          for (let i = 0; i < nAssessments; i++) {
+            console.log(matrice[y][i]);
+            // fprintf(fp,"%d,",matrice[y][i]);
+          }
           console.log("\n");
+          // fprintf(fp,"\n");
         }
       } catch (error) {
         console.error(error);
