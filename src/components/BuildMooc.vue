@@ -114,13 +114,13 @@
 
             <el-form-item label="Peer assessments mode: ">
               <div>
-                <el-radio v-model="radio1" label="1" border
+                <el-radio v-model="pamode" label="circular" border
                   >Circular <i class="el-icon-refresh"
                 /></el-radio>
-                <el-radio v-model="radio1" label="2" border
+                <el-radio v-model="pamode" label="random" border
                   >Random <i class="el-icon-connection"
                 /></el-radio>
-                <el-button @click="test"> test </el-button>
+                <!-- <el-button @click="test"> test </el-button> -->
               </div>
             </el-form-item>
 
@@ -190,7 +190,7 @@ export default {
 
   data: function () {
     return {
-      radio1: "1",
+      pamode: "circular",
       sceltoGauss: false,
       dialogVisible: false,
       activeName: "1",
@@ -215,6 +215,8 @@ export default {
     ...mapMutations(["resetAll", "GeneraMatriceAdiacenza", "Gauss"]),
 
     test: function () {
+      console.log(this.pamode);
+
       const MAXASS = 50;
       let numeri = [nStudenti];
       let n;
@@ -291,6 +293,7 @@ export default {
     real: function () {
       const fromComponent = {
         // functionN: 1,
+        pamode: this.pamode,
         NumSt: this.studentsNumber,
         Voti: this.gradesNumber,
         alfa: this.alfa,

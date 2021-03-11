@@ -164,7 +164,7 @@ export default new Vuex.Store({
             state.kDone = 0;
         },
         // state passa l'intero stato, c sono le variabili passate dai components
-        GeneraMatriceAdiacenza: (state, c) => GeneraMatriceAdiacenza(state, c.NumSt, c.Voti, c.file, c.alfa, c.min, c.max),
+        GeneraMatriceAdiacenza: (state, c) => GeneraMatriceAdiacenza(state, c.pamode, c.NumSt, c.Voti, c.file, c.alfa, c.min, c.max),
         GeneraMatriceAdiacenzaEmpty: (state, c) => GeneraMatriceAdiacenzaEmpty(state, c.NumSt, c.min, c.max),
         RiempiGrafo: (state, c) => RiempiGrafo(state, c.file),
         Teacher: (state, c) => Teacher(state, c.studente, c.voto),
@@ -216,7 +216,7 @@ function GeneraMatriceAdiacenzaEmpty(state, NumSt, min, max) {
     data += max + "\n";
 
     for (let i = 0; i < NumSt; i++) {
-            kT = IntCasuale(min, max);
+        kT = IntCasuale(min, max);
         // inserisco i voti del professore in un array di appoggio
         kTapp.push(kT);
     }
@@ -242,7 +242,7 @@ function GeneraMatriceAdiacenzaEmpty(state, NumSt, min, max) {
     return;
 }
 
-function GeneraMatriceAdiacenza(state, NumSt, Voti, FILE, alfa, min, max) {
+function GeneraMatriceAdiacenza(state, pamode, NumSt, Voti, FILE, alfa, min, max) {
 
     //per il salvataggio su txt
     let data = "";
@@ -296,24 +296,104 @@ function GeneraMatriceAdiacenza(state, NumSt, Voti, FILE, alfa, min, max) {
     }
 
     // sessione di peer-assessment
-    for (let i = 0; i < NumSt; i++) {
+    if (pamode == "circular") {
+        for (let i = 0; i < NumSt; i++) {
 
-        let KTi = kTapp[i];
-		//console.log(KTi);
-		//console.log(alfa);
-        for (let j = 0; j < Voti; j++) {
+            let KTi = kTapp[i];
+            //console.log(KTi);
+            //console.log(alfa);
+            for (let j = 0; j < Voti; j++) {
 
-            //assegnazione del voto ricevuto da p
-            p = (1 + j + i) % NumSt;
+                //assegnazione del voto ricevuto da p
+                p = (1 + j + i) % NumSt;
 
-            let KTj = kTapp[p];
-			//console.log(KTj);console.log(KTj);
-			
-            n = votoInt(KTi, KTj, alfa, min, max);
-			//console.log(n);
+                let KTj = kTapp[p];
+                //console.log(KTj);console.log(KTj);
 
-            Grafo[i][p] = n;
+                n = votoInt(KTi, KTj, alfa, min, max);
+                //console.log(n);
+
+                Grafo[i][p] = n;
+            }
         }
+    } else if (pamode == "random") {
+        const MAXASS = 50;
+        let n;
+        let nAssessments = Voti;
+        let nStudenti = NumSt;
+        let numeri = [nStudenti];
+
+        try {
+            while (nAssessments > nStudenti || nAssessments > MAXASS) {
+                console.error("Numero di Assessments troppo elevato!\n");
+            }
+
+            let matrice = [];
+            // let matrice = [nStudenti][nAssessments];
+            for (let i = 0; i < nStudenti; i++) {
+                matrice[i] = [];
+                for (let j = 0; j < nAssessments; j++) {
+                    matrice[i][j] = 0;
+                }
+            }
+            // riempi con i numeri interi delle posizioni nella matrice di adiacenza
+            for (let i = 0; i < nStudenti; i++) {
+                numeri[i] = i;
+            }
+
+            // NB max studenti 32000
+            // srand(time(NULL));
+
+            for (let j = 0; j < nAssessments; j++) {
+                for (let i = 0; i < nStudenti; i++) {
+                    do {
+                        n = Math.floor(Math.random() * nStudenti);
+                        //printf("n=%d\n",n);
+                        //printf("numeri[%d]=%d n=%d\n",i,numeri[i],n);
+
+                        //system("pause");
+                    } while (i == n || numeri[n] == -1);
+                    matrice[i][j] = n;
+                    //printf("passo\n");
+                    numeri[n] = -1;
+                }
+
+                for (let i = 0; i < nStudenti; i++) {
+                    //printf("%d\n",numeri[i]);
+                    numeri[i] = i;
+                }
+            }
+            // scrivi su file
+            //  printf("Nome del file:\n");
+            //  scanf("%s",nomeFile);
+            //  fp=fopen(nomeFile,"w+");
+            for (let y = 0; y < nStudenti; y++) {
+                let KTi = kTapp[y];
+                //console.log(KTi);
+                //console.log(alfa);
+                for (let i = 0; i < nAssessments; i++) {
+                    console.log(matrice[y][i]);
+                    // fprintf(fp,"%d,",matrice[y][i]);
+                    //assegnazione del voto ricevuto da p
+                    p = matrice[y][i];
+
+                    let KTj = kTapp[p];
+                    //console.log(KTj);console.log(KTj);
+
+                    n = votoInt(KTi, KTj, alfa, min, max);
+                    //console.log(n);
+
+                    Grafo[y][p] = n;
+                }
+                console.log("\n");
+                // fprintf(fp,"\n");
+            }
+        } catch (error) {
+            console.error(error);
+        }
+
+    } else {
+        console.error("selezione non valida");
     }
 
     // console.log(kTapp);
@@ -349,12 +429,10 @@ function votoInt(KTi, KTj, alfa, min, max) {
 
     const beta = Math.random();
     const KMAX = max;
-    const J = ((KTi-min)/(max-min)) * alfa;
-	
-	//console.log("MIN=" + min);
-	//console.log("MAX=" + max);
-   console.log("J=" + J);
-	console.log("KTi=" + KTi);
+    const J = ((KTi - min) / (max - min)) * alfa;
+
+    // console.log("J=" + J);
+    // console.log("KTi=" + KTi);
 
     const kP = parseInt(KTj + beta * (KMAX - KTj) * (1 - J));
 
@@ -831,9 +909,9 @@ function Gauss(state, numGen, mediaInput, varianzaInput, votoInf, votoSup) {
 // Standard Normal variate using Box-Muller transform.
 function randn_bm() {
     let u = 0, v = 0;
-    while(u === 0) u = Math.random(); //Converting [0,1) to (0,1)
-    while(v === 0) v = Math.random();
-    return Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
+    while (u === 0) u = Math.random(); //Converting [0,1) to (0,1)
+    while (v === 0) v = Math.random();
+    return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
 }
 
 function InitializeStudentModelByTeacher(state, delta) {
