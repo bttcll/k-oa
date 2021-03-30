@@ -92,27 +92,18 @@ export default new Vuex.Store({
     mutations: {
         saveAll(state) {
             const FileSaver = require('file-saver');
-            const msgpack = require("msgpack-lite");
-            const toHexString = bytes =>
-                bytes.reduce((str, byte) => str + byte.toString(16).padStart(2, '0'), '');
 
-            // encode from JS Object to MessagePack (Buffer)
-            const buffer = msgpack.encode(state);
             //salvo il file in locale
-            const blob = new Blob([toHexString(buffer)], {
+            const blob = new Blob([JSON.stringify(state)], {
                 type: "text/plain;charset=utf-8"
             });
             const d = new Date();
-            FileSaver.saveAs(blob, "session_" + d.getDate() + "_" + d.getMonth() + "_" + d.getFullYear() + ".bin");
+            FileSaver.saveAs(blob, "session_" + d.getDate() + "_" + d.getMonth() + "_" + d.getFullYear() + ".txt");
 
         },
         loadAll(state, file) {
-            const msgpack = require("msgpack-lite");
-            const fromHexString = hexString =>
-                new Uint8Array(hexString.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
-            // decode from MessagePack (Buffer) to JS Object
-            const data = msgpack.decode(fromHexString(file));
-
+            const data = JSON.parse(file);
+            
             state.statisticsStudents = data.statisticsStudents;
             state.alfakT = data.alfakT;
             state.KMIN = data.KMIN;
