@@ -30,7 +30,7 @@
 
       <br />
 
-      <el-button type="primary">Primary</el-button>
+      <el-button type="primary" @click="multisessione">Primary</el-button>
     </el-main>
   </div>
 </template>
@@ -103,7 +103,25 @@ export default {
 
   methods: {
     //RICHIAMO FUNZIONI DALLO STATO
-    ...mapMutations(["resetAll", "GeneraMatriceAdiacenza", "Gauss"]),
+    ...mapMutations(["resetAll", "GeneraMatriceAdiacenzaMultisessione"]),
+
+    multisessione: function () {
+      console.log("start multisessione");
+      this.loading = true;
+
+      //MESSAGGIO DI BUILD
+      this.$message("Building...");
+
+      // FUNZIONE E FINE LOADING
+      setTimeout(() => {
+        this.GeneraMatriceAdiacenzaMultisessione();
+        this.loading = false;
+        this.$message({
+          message: "Congrats, MOOC created.",
+          type: "success",
+        });
+      }, 1000);
+    },
 
     test: function () {
       console.log(this.pamode);

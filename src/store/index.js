@@ -87,7 +87,10 @@ export default new Vuex.Store({
 
         //extra per la dashboard
         builded: 0,
-        kDone: 0
+        kDone: 0,
+
+        // contatore sessioni
+        nSessione: 1
     },
     mutations: {
         saveAll(state) {
@@ -103,7 +106,7 @@ export default new Vuex.Store({
         },
         loadAll(state, file) {
             const data = JSON.parse(file);
-            
+
             state.statisticsStudents = data.statisticsStudents;
             state.alfakT = data.alfakT;
             state.KMIN = data.KMIN;
@@ -127,6 +130,7 @@ export default new Vuex.Store({
             state.nRealGrades = data.nRealGrades;
             state.builded = data.builded;
             state.kDone = data.kDone;
+            state.nSessione = data.nSessione;
         },
         resetAll(state) {
             localStorage.clear();
@@ -153,10 +157,11 @@ export default new Vuex.Store({
             state.nRealGrades = 0;
             state.builded = 0;
             state.kDone = 0;
+            state.nSessione = 1;
         },
         // state passa l'intero stato, c sono le variabili passate dai components
         GeneraMatriceAdiacenza: (state, c) => GeneraMatriceAdiacenza(state, c.pamode, c.NumSt, c.Voti, c.file, c.alfa, c.min, c.max),
-        GeneraMatriceAdiacenzaEmpty: (state, c) => GeneraMatriceAdiacenzaEmpty(state, c.NumSt, c.min, c.max),
+        GeneraMatriceAdiacenzaMultisessione: (state) => GeneraMatriceAdiacenzaMultisessione(state),
         RiempiGrafo: (state, c) => RiempiGrafo(state, c.file),
         Teacher: (state, c) => Teacher(state, c.studente, c.voto),
         Gauss: (state, c) => Gauss(state, c.NumSt, c.media, c.varianza, c.min, c.max),
@@ -174,63 +179,77 @@ export default new Vuex.Store({
 // ---------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------
 
-function GeneraMatriceAdiacenzaEmpty(state, NumSt, min, max) {
-
+function GeneraMatriceAdiacenzaMultisessione(state) {
     //per il salvataggio su txt
     let data = "";
     let FileSaver = require('file-saver');
 
     //per cicli for
-    let Grafo = [];
-    let kTapp = [];
-    let kT = 0;
-
-    //gestione array dinamico
-    for (let i = 0; i < NumSt; i++) {
-        Grafo[i] = [];
-        for (let j = 0; j < NumSt; j++) {
-            Grafo[i][j] = 0;
-        }
-    }
+    let p;
+    let n;
 
     // salvo data per il file
 
-    data += NumSt + "\n"; // numero degli studenti
-    data += 0 + "\n"; // numero dei voti tra pari
+    let nSessione = state.nSessione + 1;
+
+    if (state.NUMSTUDENTI < (state.NUMSTUDENTI - (state.NUMSTUDENTIVOTATI * nSessione))) {
+        return;
+    }
+
+    data += state.NUMSTUDENTI + "\n"; // numero degli studenti
+    data += state.NUMSTUDENTIVOTATI + "\n"; // numero dei voti tra pari
 
     // inseriamo in state alfa
     // state.alfakT = alfa;
-    data += 0 + "\n";
+    data += state.alfakT + "\n";
 
     // voti min e max
-    data += min + "\n";
-    data += max + "\n";
+    data += state.KMIN + "\n";
+    data += state.KMAX + "\n";
 
-    for (let i = 0; i < NumSt; i++) {
-        kT = IntCasuale(min, max);
-        // inserisco i voti del professore in un array di appoggio
-        kTapp.push(kT);
+    // sessione di peer-assessment SOLO CIRCULAR 
+    for (let i = 0; i < state.NUMSTUDENTI; i++) {
+
+        let KTi = state.TeacherGrades[i];
+        //console.log(KTi);
+        //console.log(alfa);
+        for (let j = 0; j < state.NUMSTUDENTIVOTATI; j++) {
+
+            //assegnazione del voto ricevuto da p
+            p = (nSessione + j + i + state.NUMSTUDENTIVOTATI - 1) % state.NUMSTUDENTI;
+
+            let KTj = state.TeacherGrades[p];
+            //console.log(KTj);console.log(KTj);
+
+            n = votoInt(KTi, KTj, state.alfakT, state.KMIN, state.KMAX);
+            //console.log(n);
+
+            state.Grafo[i][p] = n;
+        }
     }
 
-    // Inserisco i voti del professore in base alla funzione richiamta
 
-    for (let i = 0; i < NumSt - 1; i++) {
-        data += kTapp[i] + " ";
+    //multi sessione
+    data += nSessione + "\n";
+
+    for (let i = 0; i < state.NUMSTUDENTI - 1; i++) {
+        data += state.TeacherGrades[i] + " ";
     }
-    data += kTapp[kTapp.length - 1];
+    data += state.TeacherGrades[state.TeacherGrades.length - 1];
 
     //salvataggio del grafo
-    for (let i = 0; i < NumSt; i++)
-        data += "\n" + Grafo[i];
+    for (let i = 0; i < state.NUMSTUDENTI; i++)
+        data += "\n" + state.Grafo[i];
 
     //salvo il file in locale
     let blob = new Blob([data], {
         type: "text/plain;charset=utf-8"
     });
-    FileSaver.saveAs(blob, "mooc_" + NumSt + "_" + 0 + ".txt");
+    FileSaver.saveAs(blob, "mooc_" + state.NUMSTUDENTI + "_" + state.NUMSTUDENTIVOTATI + ".txt");
 
     //this.download(data, 'mooc_00.txt', 'text/plain');
     return;
+
 }
 
 function GeneraMatriceAdiacenza(state, pamode, NumSt, Voti, FILE, alfa, min, max) {
@@ -389,6 +408,9 @@ function GeneraMatriceAdiacenza(state, pamode, NumSt, Voti, FILE, alfa, min, max
 
     // console.log(kTapp);
 
+    // inserisco numero multisessione
+    data += 1 + "\n";
+
     // Inserisco i voti del professore in base alla funzione richiamta
 
     for (let i = 0; i < NumSt - 1; i++) {
@@ -454,19 +476,20 @@ function RiempiGrafo(state, FILE) {
     state.alfakT = parseFloat(F[2]);
     state.KMIN = parseInt(F[3]);
     state.KMAX = parseInt(F[4]);
+    state.nSessione = parseInt(F[5]);
 
     // console.log("\n\n\n\nKMIN: " + state.KMIN);
     // console.log("\n\n\n\nKMAX:" + state.KMAX);
 
     // TeacherGrades
-    state.TeacherGrades = F[5].split(" ");
+    state.TeacherGrades = F[6].split(" ");
     for (i = 0; i < state.NUMSTUDENTI; i++) {
         state.TeacherGrades[i] = parseInt(state.TeacherGrades[i]);
     }
 
     // Grafo
     for (i = 0; i < state.NUMSTUDENTI; i++) {
-        state.Grafo[i] = F[6 + i].split(",");
+        state.Grafo[i] = F[7 + i].split(",");
 
         for (j = 0; j < state.NUMSTUDENTI; j++) {
 

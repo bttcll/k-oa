@@ -30,6 +30,7 @@
 
         <el-menu-item
           index="4"
+          v-bind:disabled="multisessione"
           v-on:click="$emit('tabSelected', 'peer-assessment')"
         >
           <i class="el-icon-connection" />
@@ -100,7 +101,12 @@ export default {
 
   computed: {
     // VARIABILI DALLO STATO
-    ...mapState(["NUMSTUDENTI", "NumeroCore"]),
+    ...mapState([
+      "NUMSTUDENTI",
+      "NUMSTUDENTIVOTATI",
+      "NumeroCore",
+      "nSessione",
+    ]),
 
     isButtonDisabled: function () {
       if (this.NUMSTUDENTI) return false;
@@ -109,6 +115,19 @@ export default {
     knnButton: function () {
       if (this.NumeroCore > 2) return false;
       else return true;
+    },
+    multisessione: function () {
+      if (this.NUMSTUDENTI) {
+        return false;
+      } else if (
+        this.NUMSTUDENTI <
+        this.NUMSTUDENTI - this.NUMSTUDENTIVOTATI * this.nSessione
+      ) {
+        return false;
+      }
+      else{
+        return true;
+      }
     },
   },
 };
