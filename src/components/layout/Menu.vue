@@ -23,13 +23,16 @@
           <span>Load an old MOOC</span>
         </el-menu-item>
 
-        <el-menu-item index="3" v-on:click="$emit('tabSelected', 'build-mooc-empty')">
+        <el-menu-item index="3" v-on:click="$emit('tabSelected', 'build-mooc')">
           <i class="el-icon-magic-stick" />
           <span>Build a new MOOC</span>
         </el-menu-item>
-		
-		<el-menu-item index="4" v-on:click="$emit('tabSelected', 'build-mooc')">
-          <i class="el-icon-magic-stick" />
+
+        <el-menu-item
+          index="4"
+          v-on:click="$emit('tabSelected', 'peer-assessment')"
+        >
+          <i class="el-icon-connection" />
           <span>Start a PA Session</span>
         </el-menu-item>
 

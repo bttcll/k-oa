@@ -18,7 +18,7 @@ import MenuCp from "./components/layout/Menu";
 import HomeComponent from "./components/HomeComponent";
 import InstructionsComponent from "./components/InstructionsComponent";
 import BuildMooc from "./components/BuildMooc";
-import BuildMoocEmpty from "./components/BuildMoocEmpty";
+import PeerAssessment from "./components/PeerAssessment";
 import LoadMooc from "./components/LoadMooc";
 import StudentsAll from "./components/StudentsAll";
 import ChartComponent from "./components/ChartComponent";
@@ -33,7 +33,7 @@ export default {
     HeaderCp,
     MenuCp,
     BuildMooc,
-    BuildMoocEmpty,
+    PeerAssessment,
     HomeComponent,
     InstructionsComponent,
     LoadMooc,
