@@ -117,16 +117,14 @@ export default {
       else return true;
     },
     multisessione: function () {
-      if (this.NUMSTUDENTI) {
-        return false;
-      } else if (
-        this.NUMSTUDENTI <
-        this.NUMSTUDENTI - this.NUMSTUDENTIVOTATI * this.nSessione
-      ) {
-        return false;
-      }
-      else{
+      let nSessione = this.nSessione + 1;
+      if (this.NUMSTUDENTI <= 0) {
         return true;
+      } else if (this.NUMSTUDENTI < (this.NUMSTUDENTIVOTATI * nSessione)) {
+        console.log(""+(this.NUMSTUDENTI < (this.NUMSTUDENTIVOTATI * nSessione)));
+        return true;
+      } else {
+        return false;
       }
     },
   },

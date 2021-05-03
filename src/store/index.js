@@ -192,7 +192,9 @@ function GeneraMatriceAdiacenzaMultisessione(state) {
 
     let nSessione = state.nSessione + 1;
 
-    if (state.NUMSTUDENTI < (state.NUMSTUDENTI - (state.NUMSTUDENTIVOTATI * nSessione))) {
+    if (state.NUMSTUDENTI < (state.NUMSTUDENTIVOTATI * nSessione)) {
+        console.log("Esco...");
+        console.log(""+state.NUMSTUDENTI < (state.NUMSTUDENTIVOTATI * nSessione));
         return;
     }
 
