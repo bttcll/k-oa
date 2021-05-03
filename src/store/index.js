@@ -187,6 +187,8 @@ function GeneraMatriceAdiacenzaMultisessione(state) {
     //per cicli for
     let p;
     let n;
+    let kTapp = [];
+    let kT = 0;
 
     // salvo data per il file
 
@@ -194,7 +196,7 @@ function GeneraMatriceAdiacenzaMultisessione(state) {
 
     if (state.NUMSTUDENTI < (state.NUMSTUDENTIVOTATI * nSessione)) {
         console.log("Esco...");
-        console.log(""+state.NUMSTUDENTI < (state.NUMSTUDENTIVOTATI * nSessione));
+        console.log("" + state.NUMSTUDENTI < (state.NUMSTUDENTIVOTATI * nSessione));
         return;
     }
 
@@ -209,10 +211,16 @@ function GeneraMatriceAdiacenzaMultisessione(state) {
     data += state.KMIN + "\n";
     data += state.KMAX + "\n";
 
+    for (let i = 0; i < state.NUMSTUDENTI; i++) {
+        kT = IntCasuale(state.KMIN, state.KMAX);
+        // inserisco i voti del professore in un array di appoggio
+        kTapp.push(kT);
+    }
+
     // sessione di peer-assessment SOLO CIRCULAR 
     for (let i = 0; i < state.NUMSTUDENTI; i++) {
 
-        let KTi = state.TeacherGrades[i];
+        let KTi = kTapp[i];
         //console.log(KTi);
         //console.log(alfa);
         for (let j = 0; j < state.NUMSTUDENTIVOTATI; j++) {
@@ -220,7 +228,7 @@ function GeneraMatriceAdiacenzaMultisessione(state) {
             //assegnazione del voto ricevuto da p
             p = (nSessione + j + i + state.NUMSTUDENTIVOTATI - 1) % state.NUMSTUDENTI;
 
-            let KTj = state.TeacherGrades[p];
+            let KTj = kTapp[p];
             //console.log(KTj);console.log(KTj);
 
             n = votoInt(KTi, KTj, state.alfakT, state.KMIN, state.KMAX);
@@ -247,7 +255,7 @@ function GeneraMatriceAdiacenzaMultisessione(state) {
     let blob = new Blob([data], {
         type: "text/plain;charset=utf-8"
     });
-    FileSaver.saveAs(blob, "mooc_" + state.NUMSTUDENTI + "_" + state.NUMSTUDENTIVOTATI + ".txt");
+    FileSaver.saveAs(blob, "mooc_" + state.NUMSTUDENTI + "_" + state.NUMSTUDENTIVOTATI + "_ns"+nSessione+".txt");
 
     //this.download(data, 'mooc_00.txt', 'text/plain');
     return;
@@ -428,7 +436,7 @@ function GeneraMatriceAdiacenza(state, pamode, NumSt, Voti, FILE, alfa, min, max
     let blob = new Blob([data], {
         type: "text/plain;charset=utf-8"
     });
-    FileSaver.saveAs(blob, "mooc_" + NumSt + "_" + Voti + ".txt");
+    FileSaver.saveAs(blob, "mooc_" + NumSt + "_" + Voti + "_ns"+state.nSessione+".txt");
 
     //this.download(data, 'mooc_00.txt', 'text/plain');
     return;

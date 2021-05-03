@@ -30,7 +30,7 @@
 
       <br />
 
-      <el-button type="primary" @click="multisessione">Primary</el-button>
+      <el-button type="primary" @click="multisessione">Build</el-button>
     </el-main>
   </div>
 </template>
