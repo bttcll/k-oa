@@ -192,11 +192,10 @@ function GeneraMatriceAdiacenzaMultisessione(state) {
 
     // salvo data per il file
 
-    let nSessione = state.nSessione + 1;
+    let nSessione = state.nSessione;
 
-    if (state.NUMSTUDENTI < (state.NUMSTUDENTIVOTATI * nSessione)) {
+    if (state.NUMSTUDENTI < (state.NUMSTUDENTIVOTATI * (nSessione+1))) {
         console.log("Esco...");
-        console.log("" + state.NUMSTUDENTI < (state.NUMSTUDENTIVOTATI * nSessione));
         return;
     }
 
@@ -226,7 +225,7 @@ function GeneraMatriceAdiacenzaMultisessione(state) {
         for (let j = 0; j < state.NUMSTUDENTIVOTATI; j++) {
 
             //assegnazione del voto ricevuto da p
-            p = (nSessione + j + i + state.NUMSTUDENTIVOTATI - 1) % state.NUMSTUDENTI;
+            p = (nSessione * state.NUMSTUDENTIVOTATI + 1 + j + i) % state.NUMSTUDENTI;
 
             let KTj = kTapp[p];
             //console.log(KTj);console.log(KTj);
@@ -240,6 +239,7 @@ function GeneraMatriceAdiacenzaMultisessione(state) {
 
 
     //multi sessione
+    nSessione += 1;
     data += nSessione + "\n";
 
     for (let i = 0; i < state.NUMSTUDENTI - 1; i++) {
@@ -255,7 +255,7 @@ function GeneraMatriceAdiacenzaMultisessione(state) {
     let blob = new Blob([data], {
         type: "text/plain;charset=utf-8"
     });
-    FileSaver.saveAs(blob, "mooc_" + state.NUMSTUDENTI + "_" + state.NUMSTUDENTIVOTATI + "_ns"+nSessione+".txt");
+    FileSaver.saveAs(blob, "mooc_" + state.NUMSTUDENTI + "_" + state.NUMSTUDENTIVOTATI + "_ns" + nSessione + ".txt");
 
     //this.download(data, 'mooc_00.txt', 'text/plain');
     return;
@@ -436,7 +436,7 @@ function GeneraMatriceAdiacenza(state, pamode, NumSt, Voti, FILE, alfa, min, max
     let blob = new Blob([data], {
         type: "text/plain;charset=utf-8"
     });
-    FileSaver.saveAs(blob, "mooc_" + NumSt + "_" + Voti + "_ns"+state.nSessione+".txt");
+    FileSaver.saveAs(blob, "mooc_" + NumSt + "_" + Voti + "_ns" + state.nSessione + ".txt");
 
     //this.download(data, 'mooc_00.txt', 'text/plain');
     return;
