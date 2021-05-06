@@ -30,7 +30,20 @@
 
       <br />
 
-      <el-button type="primary" @click="multisessione">Build</el-button>
+      <el-form label-position="left" label-width="250px">
+        <el-form-item label="Peer assessments number: ">
+          <el-input-number
+            v-model="gradesNumber"
+            :min="1"
+            :max="max"
+            :disabled="sceltoGauss"
+          />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="multisessione">Build</el-button>
+        </el-form-item>
+      </el-form>
+
     </el-main>
   </div>
 </template>
@@ -47,6 +60,8 @@ export default {
     "alfakT",
     "KMIN",
     "KMAX",
+    "nSessione",
+    "contaZero"
   ]),
 
   data: function () {
@@ -69,15 +84,17 @@ export default {
       },
       file: null,
 
+      max:1,
+
       tableData: [
         {
           label: "Students number",
           value: 0,
         },
-        {
-          label: "Peer assessments number",
-          value: 0,
-        },
+        // {
+        //   label: "Peer assessments number",
+        //   value: 0,
+        // },
         {
           label: "Alpha",
           value: 0,
@@ -96,9 +113,9 @@ export default {
 
   created: function () {
     this.tableData[0].value = this.NUMSTUDENTI;
-    this.tableData[1].value = this.NUMSTUDENTIVOTATI;
-    this.tableData[2].value = this.alfakT;
-    this.tableData[3].value = this.KMIN + " - " + this.KMAX;
+    this.tableData[1].value = this.alfakT;
+    this.tableData[2].value = this.KMIN + " - " + this.KMAX;
+    this.max = this.contaZero;
   },
 
   methods: {
@@ -114,7 +131,11 @@ export default {
 
       // FUNZIONE E FINE LOADING
       setTimeout(() => {
-        this.GeneraMatriceAdiacenzaMultisessione();
+        const fromComponent = {
+          // functionN: 1,
+          Voti: this.gradesNumber,
+        };
+        this.GeneraMatriceAdiacenzaMultisessione(fromComponent);
         this.loading = false;
         this.$message({
           message: "Congrats, MOOC created.",

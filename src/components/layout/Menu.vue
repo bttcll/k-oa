@@ -106,6 +106,7 @@ export default {
       "NUMSTUDENTIVOTATI",
       "NumeroCore",
       "nSessione",
+      "contaZero",
     ]),
 
     isButtonDisabled: function () {
@@ -117,11 +118,9 @@ export default {
       else return true;
     },
     multisessione: function () {
-      let nSessione = this.nSessione + 1;
       if (this.NUMSTUDENTI <= 0) {
         return true;
-      } else if (this.NUMSTUDENTI < (this.NUMSTUDENTIVOTATI * nSessione)) {
-        console.log(""+(this.NUMSTUDENTI < (this.NUMSTUDENTIVOTATI * nSessione)));
+      } else if (this.contaZero == 0) {
         return true;
       } else {
         return false;

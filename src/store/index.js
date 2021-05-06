@@ -90,7 +90,8 @@ export default new Vuex.Store({
         kDone: 0,
 
         // contatore sessioni
-        nSessione: 1
+        nSessione: 1,
+        contaZero: 0
     },
     mutations: {
         saveAll(state) {
@@ -131,6 +132,7 @@ export default new Vuex.Store({
             state.builded = data.builded;
             state.kDone = data.kDone;
             state.nSessione = data.nSessione;
+            state.contaZero = data.contaZero;
         },
         resetAll(state) {
             localStorage.clear();
@@ -158,10 +160,11 @@ export default new Vuex.Store({
             state.builded = 0;
             state.kDone = 0;
             state.nSessione = 1;
+            state.contaZero = 0;
         },
         // state passa l'intero stato, c sono le variabili passate dai components
         GeneraMatriceAdiacenza: (state, c) => GeneraMatriceAdiacenza(state, c.pamode, c.NumSt, c.Voti, c.file, c.alfa, c.min, c.max),
-        GeneraMatriceAdiacenzaMultisessione: (state) => GeneraMatriceAdiacenzaMultisessione(state),
+        GeneraMatriceAdiacenzaMultisessione: (state, c) => GeneraMatriceAdiacenzaMultisessione(state, c.Voti),
         RiempiGrafo: (state, c) => RiempiGrafo(state, c.file),
         Teacher: (state, c) => Teacher(state, c.studente, c.voto),
         Gauss: (state, c) => Gauss(state, c.NumSt, c.media, c.varianza, c.min, c.max),
@@ -179,10 +182,16 @@ export default new Vuex.Store({
 // ---------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------
 
-function GeneraMatriceAdiacenzaMultisessione(state) {
+function GeneraMatriceAdiacenzaMultisessione(state, voti) {
     //per il salvataggio su txt
     let data = "";
     let FileSaver = require('file-saver');
+
+    // controllo subito spazi liberi
+    if (state.contaZero == 0) {
+        console.log("Esco...");
+        return;
+    }
 
     //per cicli for
     let p;
@@ -194,13 +203,8 @@ function GeneraMatriceAdiacenzaMultisessione(state) {
 
     let nSessione = state.nSessione;
 
-    if (state.NUMSTUDENTI < (state.NUMSTUDENTIVOTATI * (nSessione+1))) {
-        console.log("Esco...");
-        return;
-    }
-
     data += state.NUMSTUDENTI + "\n"; // numero degli studenti
-    data += state.NUMSTUDENTIVOTATI + "\n"; // numero dei voti tra pari
+    data += voti + "\n"; // numero dei voti tra pari
 
     // inseriamo in state alfa
     // state.alfakT = alfa;
@@ -216,16 +220,27 @@ function GeneraMatriceAdiacenzaMultisessione(state) {
         kTapp.push(kT);
     }
 
+    // recupero l'ultima posizione di voto libero nella matrice
+    let primaRiga = state.Grafo[0];
+    let ultimoVoto;
+
+    for(let i=1; i<primaRiga.length; i++){
+        if(primaRiga[i]==0){
+            ultimoVoto=i;
+            break;
+        }
+    }
+
     // sessione di peer-assessment SOLO CIRCULAR 
     for (let i = 0; i < state.NUMSTUDENTI; i++) {
 
         let KTi = kTapp[i];
         //console.log(KTi);
         //console.log(alfa);
-        for (let j = 0; j < state.NUMSTUDENTIVOTATI; j++) {
+        for (let j = 0; j < voti; j++) {
 
             //assegnazione del voto ricevuto da p
-            p = (nSessione * state.NUMSTUDENTIVOTATI + 1 + j + i) % state.NUMSTUDENTI;
+            p = (ultimoVoto + j + i) % state.NUMSTUDENTI;
 
             let KTj = kTapp[p];
             //console.log(KTj);console.log(KTj);
@@ -255,7 +270,7 @@ function GeneraMatriceAdiacenzaMultisessione(state) {
     let blob = new Blob([data], {
         type: "text/plain;charset=utf-8"
     });
-    FileSaver.saveAs(blob, "mooc_" + state.NUMSTUDENTI + "_" + state.NUMSTUDENTIVOTATI + "_ns" + nSessione + ".txt");
+    FileSaver.saveAs(blob, "mooc_" + state.NUMSTUDENTI + "_" + voti + "_ns" + nSessione + ".txt");
 
     //this.download(data, 'mooc_00.txt', 'text/plain');
     return;
@@ -509,6 +524,16 @@ function RiempiGrafo(state, FILE) {
 
         state.cont[i] = 0;
     }
+
+    let primaRiga = state.Grafo[0];
+    let contaZero=0;
+
+    primaRiga.forEach(element => {
+        if(element==0) contaZero++;
+    });
+
+    state.contaZero = contaZero;
+    
 
     /* inizializzazione modelli */
     InizializzaCore(state);
