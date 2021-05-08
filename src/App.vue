@@ -25,6 +25,7 @@ import ChartComponent from "./components/ChartComponent";
 import KnnComponent from "./components/KnnComponent";
 import ExportComponent from "./components/ExportComponent";
 import SessionComponent from "./components/SessionComponent";
+import TeacherAssessment from "./components/TeacherAssessment ";
 // import ImportGrades from "./components/ImportGrades";
 
 export default {
@@ -41,25 +42,26 @@ export default {
     ChartComponent,
     KnnComponent,
     ExportComponent,
-    SessionComponent
+    SessionComponent,
+    TeacherAssessment,
     // ImportGrades
   },
   data() {
     return {
       currentTab: "home-component",
-      loading: false
+      loading: false,
     };
   },
   computed: {
     currentTabComponent() {
       return this.currentTab;
-    }
+    },
   },
   methods: {
     tabSelected(sel) {
       return (this.currentTab = sel);
-    }
-  }
+    },
+  },
 };
 </script>
 

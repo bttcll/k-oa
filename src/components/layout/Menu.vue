@@ -23,13 +23,21 @@
           <span>Load an old MOOC</span>
         </el-menu-item>
 
-        <el-menu-item index="3" v-on:click="$emit('tabSelected', 'build-mooc')">
+        <el-menu-item
+          index="3"
+          v-on:click="$emit('tabSelected', 'teacher-assessment')"
+        >
+          <i class="el-icon-s-custom" />
+          <span>Teacher Assessment</span>
+        </el-menu-item>
+
+        <el-menu-item index="4" v-on:click="$emit('tabSelected', 'build-mooc')">
           <i class="el-icon-magic-stick" />
           <span>Build a new MOOC</span>
         </el-menu-item>
 
         <el-menu-item
-          index="4"
+          index="5"
           v-bind:disabled="multisessione"
           v-on:click="$emit('tabSelected', 'peer-assessment')"
         >
@@ -38,7 +46,7 @@
         </el-menu-item>
 
         <el-menu-item
-          index="5"
+          index="6"
           v-bind:disabled="isButtonDisabled"
           v-on:click="$emit('tabSelected', 'students-all')"
         >
@@ -56,7 +64,7 @@
         </el-menu-item> -->
 
         <el-menu-item
-          index="6"
+          index="7"
           v-bind:disabled="knnButton"
           v-on:click="$emit('tabSelected', 'knn-component')"
         >
@@ -65,7 +73,7 @@
         </el-menu-item>
 
         <el-menu-item
-          index="7"
+          index="8"
           v-bind:disabled="isButtonDisabled"
           v-on:click="$emit('tabSelected', 'chart-component')"
         >
@@ -74,7 +82,7 @@
         </el-menu-item>
 
         <el-menu-item
-          index="8"
+          index="9"
           v-bind:disabled="isButtonDisabled"
           v-on:click="$emit('tabSelected', 'export-component')"
         >
@@ -82,7 +90,7 @@
           <span>Export MOOC</span>
         </el-menu-item>
         <el-menu-item
-          index="9"
+          index="10"
           v-on:click="$emit('tabSelected', 'session-component')"
         >
           <i class="el-icon-switch-button" />

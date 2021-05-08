@@ -164,6 +164,7 @@ export default new Vuex.Store({
         },
         // state passa l'intero stato, c sono le variabili passate dai components
         GeneraMatriceAdiacenza: (state, c) => GeneraMatriceAdiacenza(state, c.pamode, c.NumSt, c.Voti, c.file, c.alfa, c.min, c.max),
+        GeneraMatriceAdiacenzaDocenti: (state, c) => GeneraMatriceAdiacenzaDocenti(state, c.pamode, c.NumSt, c.Voti, c.file, c.alfa, c.min, c.max),
         GeneraMatriceAdiacenzaMultisessione: (state, c) => GeneraMatriceAdiacenzaMultisessione(state, c.Voti),
         RiempiGrafo: (state, c) => RiempiGrafo(state, c.file),
         Teacher: (state, c) => Teacher(state, c.studente, c.voto),
@@ -181,6 +182,111 @@ export default new Vuex.Store({
 // ----------------------------------- FUNZIONI ------------------------------------------
 // ---------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------
+
+function GeneraMatriceAdiacenzaDocenti(state, pamode, NumSt, Voti, FILE, alfa, min, max) {
+
+    //per il salvataggio su txt
+    let data = "";
+    let FileSaver = require('file-saver');
+
+    console.log("votazioni tra docenti");
+
+    //per cicli for
+    let p;
+    let n;
+    let Grafo = [];
+    let kTapp = [];
+    let kT = 0;
+
+    let F = [];
+
+    // Se il file esiste
+    if (FILE)
+        F = FILE.split("\n");
+    else
+        F = null;
+
+    //gestione array dinamico
+    for (let i = 0; i < NumSt; i++) {
+        Grafo[i] = [];
+        for (let j = 0; j < NumSt; j++) {
+            Grafo[i][j] = 0;
+        }
+    }
+
+    // salvo data per il file
+
+    data += NumSt + "\n"; // numero degli studenti
+    data += Voti + "\n"; // numero dei voti tra pari
+
+    // inseriamo in state alfa
+    // state.alfakT = alfa;
+    data += alfa + "\n";
+
+    // voti min e max
+    data += min + "\n";
+    data += max + "\n";
+
+    for (let i = 0; i < NumSt; i++) {
+
+        if (F)
+            kT = parseInt(F[i]);
+        else
+            kT = IntCasuale(min, max);
+
+        // inserisco i voti del professore in un array di appoggio
+        kTapp.push(kT);
+    }
+
+    // sessione di peer-assessment
+    for (let i = 0; i < NumSt; i++) {
+
+        // let KTi = kTapp[i];
+        //console.log(KTi);
+        //console.log(alfa);
+        for (let j = 0; j < Voti; j++) {
+
+            //assegnazione del voto ricevuto da p
+            p = (1 + j + i) % NumSt;
+
+            let KTj = kTapp[p];
+            //console.log(KTj);console.log(KTj);
+
+            // GOD MODE
+            
+            n = KTj;
+            //console.log(n);
+
+            Grafo[i][p] = n;
+        }
+    }
+
+
+    // console.log(kTapp);
+
+    // inserisco numero multisessione
+    data += 1 + "\n";
+
+    // Inserisco i voti del professore in base alla funzione richiamta
+
+    for (let i = 0; i < NumSt - 1; i++) {
+        data += kTapp[i] + " ";
+    }
+    data += kTapp[kTapp.length - 1];
+
+    //salvataggio del grafo
+    for (let i = 0; i < NumSt; i++)
+        data += "\n" + Grafo[i];
+
+    //salvo il file in locale
+    let blob = new Blob([data], {
+        type: "text/plain;charset=utf-8"
+    });
+    FileSaver.saveAs(blob, "mooc_" + NumSt + "_" + Voti + "_ns" + state.nSessione + ".txt");
+
+    //this.download(data, 'mooc_00.txt', 'text/plain');
+    return;
+}
 
 function GeneraMatriceAdiacenzaMultisessione(state, voti) {
     //per il salvataggio su txt
@@ -224,9 +330,9 @@ function GeneraMatriceAdiacenzaMultisessione(state, voti) {
     let primaRiga = state.Grafo[0];
     let ultimoVoto;
 
-    for(let i=1; i<primaRiga.length; i++){
-        if(primaRiga[i]==0){
-            ultimoVoto=i;
+    for (let i = 1; i < primaRiga.length; i++) {
+        if (primaRiga[i] == 0) {
+            ultimoVoto = i;
             break;
         }
     }
@@ -526,14 +632,14 @@ function RiempiGrafo(state, FILE) {
     }
 
     let primaRiga = state.Grafo[0];
-    let contaZero=0;
+    let contaZero = 0;
 
     primaRiga.forEach(element => {
-        if(element==0) contaZero++;
+        if (element == 0) contaZero++;
     });
 
     state.contaZero = contaZero;
-    
+
 
     /* inizializzazione modelli */
     InizializzaCore(state);
