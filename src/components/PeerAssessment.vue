@@ -35,15 +35,30 @@
           <el-input-number
             v-model="gradesNumber"
             :min="1"
-            :max="max"
+            :max="studentsNumber - 1"
             :disabled="sceltoGauss"
           />
         </el-form-item>
+
+        <el-form-item label="Peer assessments mode: ">
+          <div>
+            <el-radio v-model="pamode" label="circular" border
+              >Circular <i class="el-icon-refresh"
+            /></el-radio>
+            <el-radio v-model="pamode" label="random" border
+              >Random <i class="el-icon-connection"
+            /></el-radio>
+            <!-- <el-button @click="test"> test </el-button> -->
+          </div>
+        </el-form-item>
+
+        <br />
+
         <el-form-item>
           <el-button type="primary" @click="multisessione">Build</el-button>
+          <el-button @click="gradesNumber = 1">Reset</el-button>
         </el-form-item>
       </el-form>
-
     </el-main>
   </div>
 </template>
@@ -61,7 +76,6 @@ export default {
     "KMIN",
     "KMAX",
     "nSessione",
-    "contaZero"
   ]),
 
   data: function () {
@@ -84,8 +98,6 @@ export default {
       },
       file: null,
 
-      max:1,
-
       tableData: [
         {
           label: "Students number",
@@ -103,10 +115,6 @@ export default {
           label: "Rating scale",
           value: "",
         },
-        {
-          label: "Peer assessments mode",
-          value: "Circular",
-        },
       ],
     };
   },
@@ -115,7 +123,7 @@ export default {
     this.tableData[0].value = this.NUMSTUDENTI;
     this.tableData[1].value = this.alfakT;
     this.tableData[2].value = this.KMIN + " - " + this.KMAX;
-    this.max = this.contaZero;
+    this.studentsNumber = this.NUMSTUDENTI;
   },
 
   methods: {
@@ -133,6 +141,7 @@ export default {
       setTimeout(() => {
         const fromComponent = {
           // functionN: 1,
+          pamode: this.pamode,
           Voti: this.gradesNumber,
         };
         this.GeneraMatriceAdiacenzaMultisessione(fromComponent);
@@ -142,129 +151,6 @@ export default {
           type: "success",
         });
       }, 1000);
-    },
-
-    test: function () {
-      console.log(this.pamode);
-
-      const MAXASS = 50;
-      let numeri = [nStudenti];
-      let n;
-      let nAssessments = this.gradesNumber;
-      let nStudenti = this.studentsNumber;
-
-      try {
-        while (nAssessments > nStudenti || nAssessments > MAXASS) {
-          console.error("Numero di Assessments troppo elevato!\n");
-        }
-
-        let matrice = [];
-        // let matrice = [nStudenti][nAssessments];
-        for (let i = 0; i < nStudenti; i++) {
-          matrice[i] = [];
-          for (let j = 0; j < nAssessments; j++) {
-            matrice[i][j] = 0;
-          }
-        }
-        // riempi con i numeri interi delle posizioni nella matrice di adiacenza
-        for (let i = 0; i < nStudenti; i++) {
-          numeri[i] = i;
-        }
-
-        // NB max studenti 32000
-        // srand(time(NULL));
-
-        for (let j = 0; j < nAssessments; j++) {
-          for (let i = 0; i < nStudenti; i++) {
-            do {
-              n = Math.floor(Math.random() * nStudenti);
-              //printf("n=%d\n",n);
-              //printf("numeri[%d]=%d n=%d\n",i,numeri[i],n);
-
-              //system("pause");
-            } while (i == n || numeri[n] == -1);
-            matrice[i][j] = n;
-            //printf("passo\n");
-            numeri[n] = -1;
-          }
-
-          for (let i = 0; i < nStudenti; i++) {
-            //printf("%d\n",numeri[i]);
-            numeri[i] = i;
-          }
-        }
-        // scrivi su file
-        //  printf("Nome del file:\n");
-        //  scanf("%s",nomeFile);
-        //  fp=fopen(nomeFile,"w+");
-        for (let y = 0; y < nStudenti; y++) {
-          for (let i = 0; i < nAssessments; i++) {
-            console.log(matrice[y][i]);
-            // fprintf(fp,"%d,",matrice[y][i]);
-          }
-          console.log("\n");
-          // fprintf(fp,"\n");
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    },
-
-    loadTextFromFile(ev) {
-      const file = ev.target.files[0];
-      const reader = new FileReader();
-
-      reader.onload = (e) => {
-        this.file = e.target.result;
-      };
-      reader.readAsText(file);
-    },
-
-    real: function () {
-      const fromComponent = {
-        // functionN: 1,
-        pamode: this.pamode,
-        NumSt: this.studentsNumber,
-        Voti: this.gradesNumber,
-        alfa: this.alfa,
-        min: this.kValue[0],
-        max: this.kValue[1],
-        file: this.file,
-      };
-      //resetto tutto prima di creare il file
-      this.resetAll();
-      this.loading = true;
-
-      //MESSAGGIO DI BUILD
-      this.$message("Building...");
-
-      // FUNZIONE E FINE LOADING
-      setTimeout(() => {
-        this.GeneraMatriceAdiacenza(fromComponent);
-        this.loading = false;
-        this.$message({
-          message: "Congrats, MOOC created.",
-          type: "success",
-        });
-      }, 1000);
-    },
-
-    // FUNZIONE GAUSS ATTIVABILE CON LE FUNZIONI SOPRA LA TABELLA
-    gauss: function () {
-      this.dialogVisible = false;
-      const fromComponent = {
-        // functionN: 6,
-        NumSt: this.studentsNumber,
-        media: this.media,
-        varianza: this.varianza,
-        min: this.kValue[0],
-        max: this.kValue[1],
-      };
-      this.loading = true;
-      setTimeout(() => {
-        this.Gauss(fromComponent);
-        this.loading = false;
-      }, 500);
     },
   },
 };

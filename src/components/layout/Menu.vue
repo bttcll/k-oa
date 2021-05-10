@@ -114,7 +114,6 @@ export default {
       "NUMSTUDENTIVOTATI",
       "NumeroCore",
       "nSessione",
-      "contaZero",
     ]),
 
     isButtonDisabled: function () {
@@ -126,9 +125,7 @@ export default {
       else return true;
     },
     multisessione: function () {
-      if (this.NUMSTUDENTI <= 0) {
-        return true;
-      } else if (this.contaZero == 0) {
+      if (this.nSessione == 0) {
         return true;
       } else {
         return false;
