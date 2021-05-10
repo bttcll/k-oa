@@ -39,11 +39,26 @@
             :disabled="sceltoGauss"
           />
         </el-form-item>
+
+        <el-form-item label="Peer assessments mode: ">
+          <div>
+            <el-radio v-model="pamode" label="circular" border
+              >Circular <i class="el-icon-refresh"
+            /></el-radio>
+            <el-radio v-model="pamode" label="random" border
+              >Random <i class="el-icon-connection"
+            /></el-radio>
+            <!-- <el-button @click="test"> test </el-button> -->
+          </div>
+        </el-form-item>
+
+        <br />
+
         <el-form-item>
           <el-button type="primary" @click="multisessione">Build</el-button>
+          <el-button @click="gradesNumber = 1">Reset</el-button>
         </el-form-item>
       </el-form>
-
     </el-main>
   </div>
 </template>
@@ -61,7 +76,7 @@ export default {
     "KMIN",
     "KMAX",
     "nSessione",
-    "contaZero"
+    "contaZero",
   ]),
 
   data: function () {
@@ -84,7 +99,7 @@ export default {
       },
       file: null,
 
-      max:1,
+      max: 1,
 
       tableData: [
         {
@@ -102,10 +117,6 @@ export default {
         {
           label: "Rating scale",
           value: "",
-        },
-        {
-          label: "Peer assessments mode",
-          value: "Circular",
         },
       ],
     };
