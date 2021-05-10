@@ -90,8 +90,7 @@ export default new Vuex.Store({
         kDone: 0,
 
         // contatore sessioni
-        nSessione: 0,
-        contaZero: 0
+        nSessione: 0
     },
     mutations: {
         saveAll(state) {
@@ -132,7 +131,6 @@ export default new Vuex.Store({
             state.builded = data.builded;
             state.kDone = data.kDone;
             state.nSessione = data.nSessione;
-            state.contaZero = data.contaZero;
         },
         resetAll(state) {
             localStorage.clear();
@@ -160,7 +158,6 @@ export default new Vuex.Store({
             state.builded = 0;
             state.kDone = 0;
             state.nSessione = 0;
-            state.contaZero = 0;
         },
         // state passa l'intero stato, c sono le variabili passate dai components
         GeneraMatriceAdiacenza: (state, c) => GeneraMatriceAdiacenza(state, c.pamode, c.NumSt, c.Voti, c.file, c.alfa, c.min, c.max),
@@ -297,11 +294,9 @@ function GeneraMatriceAdiacenzaMultisessione(state, pamode, Voti) {
     let p;
     let n;
     let Grafo = [];
-    let kTapp = [];
-    let kT = 0;
 
-    let min = state.KMIN;
     let max = state.KMAX;
+    let NumSt = state.NUMSTUDENTI;
 
     //gestione array dinamico
     for (let i = 0; i < NumSt; i++) {
@@ -324,13 +319,6 @@ function GeneraMatriceAdiacenzaMultisessione(state, pamode, Voti) {
     data += state.KMIN + "\n";
     data += state.KMAX + "\n";
 
-    for (let i = 0; i < NumSt; i++) {
-
-        kT = IntCasuale(min, max);
-        // inserisco i voti del professore in un array di appoggio
-        kTapp.push(kT);
-    }
-
     // sessione di peer-assessment
     if (pamode == "circular") {
         for (let i = 0; i < NumSt; i++) {
@@ -345,7 +333,9 @@ function GeneraMatriceAdiacenzaMultisessione(state, pamode, Voti) {
                 p = (1 + j + i) % NumSt;
 
                 let KPj = state.classe[p].k;
-                
+
+                console.log(KPj);
+
                 //console.log(KTj);console.log(KTj);
 
                 n = votoIntMulti(KPj, Ji, max);
@@ -406,7 +396,8 @@ function GeneraMatriceAdiacenzaMultisessione(state, pamode, Voti) {
             //  scanf("%s",nomeFile);
             //  fp=fopen(nomeFile,"w+");
             for (let y = 0; y < nStudenti; y++) {
-                let KTi = kTapp[y];
+                // let KTi = kTapp[y];
+                let Ji = state.classe[y].j;
                 //console.log(KTi);
                 //console.log(alfa);
                 for (let i = 0; i < nAssessments; i++) {
@@ -415,10 +406,12 @@ function GeneraMatriceAdiacenzaMultisessione(state, pamode, Voti) {
                     //assegnazione del voto ricevuto da p
                     p = matrice[y][i];
 
-                    let KTj = kTapp[p];
+                    // let KTj = kTapp[p];
+                    let KPj = state.classe[p].k;
                     //console.log(KTj);console.log(KTj);
 
-                    n = votoInt(KTi, KTj, alfa, min, max);
+                    // n = votoInt(KTi, KTj, alfa, min, max);
+                    n = votoIntMulti(KPj, Ji, max);
                     //console.log(n);
 
                     Grafo[y][p] = n;
@@ -437,14 +430,15 @@ function GeneraMatriceAdiacenzaMultisessione(state, pamode, Voti) {
     // console.log(kTapp);
 
     // inserisco numero multisessione
-    data += 1 + "\n";
+    let nSessione = parseInt(state.nSessione) + 1;
+    data += nSessione + "\n";
 
     // Inserisco i voti del professore in base alla funzione richiamta
 
     for (let i = 0; i < NumSt - 1; i++) {
-        data += kTapp[i] + " ";
+        data += state.TeacherGrades[i] + " ";
     }
-    data += kTapp[kTapp.length - 1];
+    data += state.TeacherGrades[state.TeacherGrades.length - 1];
 
     //salvataggio del grafo
     for (let i = 0; i < NumSt; i++)
@@ -454,7 +448,7 @@ function GeneraMatriceAdiacenzaMultisessione(state, pamode, Voti) {
     let blob = new Blob([data], {
         type: "text/plain;charset=utf-8"
     });
-    FileSaver.saveAs(blob, "mooc_" + NumSt + "_" + Voti + "_ns" + state.nSessione + ".txt");
+    FileSaver.saveAs(blob, "mooc_" + NumSt + "_" + Voti + "_ns" + nSessione + ".txt");
 
     //this.download(data, 'mooc_00.txt', 'text/plain');
     return;
@@ -635,7 +629,7 @@ function GeneraMatriceAdiacenza(state, pamode, NumSt, Voti, FILE, alfa, min, max
     let blob = new Blob([data], {
         type: "text/plain;charset=utf-8"
     });
-    FileSaver.saveAs(blob, "mooc_" + NumSt + "_" + Voti + "_ns" + state.nSessione + ".txt");
+    FileSaver.saveAs(blob, "mooc_" + NumSt + "_" + Voti + "_ns" + 1 + ".txt");
 
     //this.download(data, 'mooc_00.txt', 'text/plain');
     return;

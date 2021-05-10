@@ -71,7 +71,7 @@
               <el-input-number
                 v-model="gradesNumber"
                 :min="1"
-                :max="50"
+                :max="studentsNumber - 1"
                 :disabled="sceltoGauss"
               />
             </el-form-item>
@@ -213,72 +213,6 @@ export default {
   methods: {
     //RICHIAMO FUNZIONI DALLO STATO
     ...mapMutations(["resetAll", "GeneraMatriceAdiacenza", "Gauss"]),
-
-    test: function () {
-      console.log(this.pamode);
-
-      const MAXASS = 50;
-      let numeri = [nStudenti];
-      let n;
-      let nAssessments = this.gradesNumber;
-      let nStudenti = this.studentsNumber;
-
-      try {
-        while (nAssessments > nStudenti || nAssessments > MAXASS) {
-          console.error("Numero di Assessments troppo elevato!\n");
-        }
-
-        let matrice = [];
-        // let matrice = [nStudenti][nAssessments];
-        for (let i = 0; i < nStudenti; i++) {
-          matrice[i] = [];
-          for (let j = 0; j < nAssessments; j++) {
-            matrice[i][j] = 0;
-          }
-        }
-        // riempi con i numeri interi delle posizioni nella matrice di adiacenza
-        for (let i = 0; i < nStudenti; i++) {
-          numeri[i] = i;
-        }
-
-        // NB max studenti 32000
-        // srand(time(NULL));
-
-        for (let j = 0; j < nAssessments; j++) {
-          for (let i = 0; i < nStudenti; i++) {
-            do {
-              n = Math.floor(Math.random() * nStudenti);
-              //printf("n=%d\n",n);
-              //printf("numeri[%d]=%d n=%d\n",i,numeri[i],n);
-
-              //system("pause");
-            } while (i == n || numeri[n] == -1);
-            matrice[i][j] = n;
-            //printf("passo\n");
-            numeri[n] = -1;
-          }
-
-          for (let i = 0; i < nStudenti; i++) {
-            //printf("%d\n",numeri[i]);
-            numeri[i] = i;
-          }
-        }
-        // scrivi su file
-        //  printf("Nome del file:\n");
-        //  scanf("%s",nomeFile);
-        //  fp=fopen(nomeFile,"w+");
-        for (let y = 0; y < nStudenti; y++) {
-          for (let i = 0; i < nAssessments; i++) {
-            console.log(matrice[y][i]);
-            // fprintf(fp,"%d,",matrice[y][i]);
-          }
-          console.log("\n");
-          // fprintf(fp,"\n");
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    },
 
     loadTextFromFile(ev) {
       const file = ev.target.files[0];
