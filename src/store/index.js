@@ -279,7 +279,7 @@ function GeneraMatriceAdiacenzaDocenti(state, pamode, NumSt, Voti, FILE, alfa, m
     let blob = new Blob([data], {
         type: "text/plain;charset=utf-8"
     });
-    FileSaver.saveAs(blob, "mooc_" + NumSt + "_" + Voti + "_ns" + state.nSessione + ".txt");
+    FileSaver.saveAs(blob, "teacher_" + NumSt + "_" + Voti + ".txt");
 
     //this.download(data, 'mooc_00.txt', 'text/plain');
     return;
@@ -665,7 +665,8 @@ function votoIntMulti(KPj, Ji, max) {
     // console.log("J=" + J);
     // console.log("KTi=" + KTi);
 
-    const kP = parseInt(KPj + beta * (KMAX - KPj) * (1 - J));
+    const kP = Number.parseFloat(KPj + beta * (KMAX - KPj) * (1 - J)).toPrecision(2);
+    // const kP = parseInt(KPj + beta * (KMAX - KPj) * (1 - J));
 
     // console.log("kP:" + kP);
 
