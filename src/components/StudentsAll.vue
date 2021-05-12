@@ -2,25 +2,23 @@
   <div>
     <el-main v-loading="loading" element-loading-text="Loading...">
       <p>
-        Teacher Grading: By this option the user(tutor or teacher)
-        can grade one, all or a group of students. When a MOOC is loaded,
-        all the students are presented to the
-        user and can be sorted according to their Dev value. First this allows
-        to select the students directly to grade, basing this choice on
-        the reliability of their current K value as computed by peers.
-        Secondly, the user can give a grade from 1 to 10.
+        Teacher Grading: By this option the user(tutor or teacher) can grade
+        one, all or a group of students. When a MOOC is loaded, all the students
+        are presented to the user and can be sorted according to their Dev
+        value. First this allows to select the students directly to grade,
+        basing this choice on the reliability of their current K value as
+        computed by peers. Secondly, the user can give a grade from 1 to 10.
       </p>
 
       <p>
-        Assign Real Grades: Thanks to this function, the user
-        can assign values directly to one or more students. The features
-        of this function have to be described in depth as used in our
-        RQ study. Once the user launches this function, the number
-        of students to be assigned the real grade is requested. The real
-        grade is the true grade that the teacher would have given to
-        the student or to a group of them, as explained in the previous
-        Section. So this function does nothing but copy the real votes
-        on the students’ current grades.
+        Assign Real Grades: Thanks to this function, the user can assign values
+        directly to one or more students. The features of this function have to
+        be described in depth as used in our RQ study. Once the user launches
+        this function, the number of students to be assigned the real grade is
+        requested. The real grade is the true grade that the teacher would have
+        given to the student or to a group of them, as explained in the previous
+        Section. So this function does nothing but copy the real votes on the
+        students’ current grades.
       </p>
 
       <ul>
@@ -29,7 +27,7 @@
         <li>kT = K Teacher</li>
       </ul>
 
-      <el-collapse accordion>
+      <el-collapse v-model="activeName" accordion>
         <el-collapse-item name="1">
           <template slot="title">
             <i class="header-icon el-icon-info"></i>
@@ -39,17 +37,23 @@
 
           <el-form label-position="left" :inline="true">
             <el-form-item label="Delta: ">
-              <el-input-number v-model="delta" :precision="2" :step="0.1" :min="0" :max="1"></el-input-number>
+              <el-input-number
+                v-model="delta"
+                :precision="2"
+                :step="0.1"
+                :min="0"
+                :max="1"
+              ></el-input-number>
             </el-form-item>
 
             <el-form-item>
-              <el-button type="primary" @click="inizialize(), loading=true">Inizialize</el-button>
+              <el-button type="primary" @click="inizialize(), (loading = true)"
+                >Inizialize</el-button
+              >
             </el-form-item>
           </el-form>
         </el-collapse-item>
-      </el-collapse>
 
-      <el-collapse accordion>
         <el-collapse-item name="2">
           <template slot="title">
             <i class="header-icon el-icon-info"></i>
@@ -58,11 +62,40 @@
 
           <el-form label-position="left" :inline="true">
             <el-form-item label="Students to grade: ">
-              <el-input-number v-model="nReal" :min="1" :max="NUMSTUDENTI"></el-input-number>
+              <el-input-number
+                v-model="nReal"
+                :min="1"
+                :max="NUMSTUDENTI"
+              ></el-input-number>
             </el-form-item>
 
             <el-form-item>
-              <el-button type="primary" @click="realGrade(), loading=true">Start</el-button>
+              <el-button type="primary" @click="realGrade(), (loading = true)"
+                >Start</el-button
+              >
+            </el-form-item>
+          </el-form>
+        </el-collapse-item>
+
+        <el-collapse-item name="3">
+          <template slot="title">
+            <i class="el-icon-timer"></i>
+            &nbsp; Quick Teacher grading
+          </template>
+
+          <el-form label-position="left" :inline="true">
+            <el-form-item label="Students to grade: ">
+              <el-input-number
+                v-model="nReal"
+                :min="1"
+                :max="NUMSTUDENTI"
+              ></el-input-number>
+            </el-form-item>
+
+            <el-form-item>
+              <el-button type="primary" @click="sendGradeFast(), (loading = true)"
+                >Start</el-button
+              >
             </el-form-item>
           </el-form>
         </el-collapse-item>
@@ -109,13 +142,34 @@
         :table-props="tableProps"
         :filters="filters"
         :page-size="10"
-        :pagination-props="{ small: true , background: true, pageSizes: [10, 50, 100] }"
+        :pagination-props="{
+          small: true,
+          background: true,
+          pageSizes: [10, 50, 100],
+        }"
       >
-        <el-table-column prop="index" label="ID" width="100" sortable="custom"></el-table-column>
+        <el-table-column
+          prop="index"
+          label="ID"
+          width="100"
+          sortable="custom"
+        ></el-table-column>
 
-        <el-table-column prop="k" label="kP" width="100" :formatter="kContent" sortable="custom"></el-table-column>
+        <el-table-column
+          prop="k"
+          label="kP"
+          width="100"
+          :formatter="kContent"
+          sortable="custom"
+        ></el-table-column>
 
-        <el-table-column prop="j" label="J" width="100" :formatter="kContent" sortable="custom"></el-table-column>
+        <el-table-column
+          prop="j"
+          label="J"
+          width="100"
+          :formatter="kContent"
+          sortable="custom"
+        ></el-table-column>
 
         <el-table-column
           :key="classe.dev"
@@ -128,11 +182,21 @@
 
         <el-table-column prop="stato" label="S" width="100"></el-table-column>
 
-        <el-table-column prop="kt" label="kR" width="100" :formatter="kContent"></el-table-column>
+        <el-table-column
+          prop="kt"
+          label="kR"
+          width="100"
+          :formatter="kContent"
+        ></el-table-column>
 
         <!-- <el-table-column prop="jt" label="jt" width="100" :formatter="jdevContent"></el-table-column> -->
 
-        <el-table-column prop="kTeacher" label="kT" :formatter="kContent" width="100"></el-table-column>
+        <el-table-column
+          prop="kTeacher"
+          label="kT"
+          :formatter="kContent"
+          width="100"
+        ></el-table-column>
 
         <el-table-column
           prop="delta"
@@ -142,14 +206,19 @@
           sortable="custom"
         ></el-table-column>
 
-        <el-table-column align="center" fixed="right" label="Teacher grading" width="130">
+        <el-table-column
+          align="center"
+          fixed="right"
+          label="Teacher grading"
+          width="130"
+        >
           <template slot-scope="scope">
             <el-link
               icon="el-icon-edit-outline"
               class="icon"
               v-if="!scope.row.stato"
               :underline="false"
-              @click.native.prevent="grade(scope.row), form.num=1"
+              @click.native.prevent="grade(scope.row), (form.num = 1)"
             ></el-link>
           </template>
         </el-table-column>
@@ -179,14 +248,21 @@
       <div class="block">
         <i class="el-icon-caret-right" />
         <span>
-          <b>Grade: {{form.num}}</b>
+          <b>Grade: {{ form.num }}</b>
         </span>
-        <el-slider v-model="form.num" :min=KMIN :max=KMAX show-stops></el-slider>
+        <el-slider
+          v-model="form.num"
+          :min="KMIN"
+          :max="KMAX"
+          show-stops
+        ></el-slider>
       </div>
 
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVoteVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="sendGrade(), loading=true">Confirm</el-button>
+        <el-button type="primary" @click="sendGrade(), (loading = true)"
+          >Confirm</el-button
+        >
       </span>
     </el-dialog>
   </div>
@@ -200,14 +276,22 @@ export default {
   name: "students-all",
 
   components: {
-    DataTables
+    DataTables,
   },
 
   // VARIABILI DALLO STATO
-  computed: mapState(["classe", "NumeroCore", "NUMSTUDENTI", "alfakT", "KMIN", "KMAX"]),
+  computed: mapState([
+    "classe",
+    "NumeroCore",
+    "NUMSTUDENTI",
+    "alfakT",
+    "KMIN",
+    "KMAX",
+  ]),
 
-  data: function() {
+  data: function () {
     return {
+      activeName: "3",
       loading: false,
       componentKey: 0,
       delta: 0,
@@ -216,20 +300,20 @@ export default {
       filters: [
         {
           prop: "stato",
-          value: ""
-        }
+          value: "",
+        },
       ],
 
       tableProps: {
         maxHeight: "350",
         size: "small",
-        rowStyle: this.tableRowStyle
+        rowStyle: this.tableRowStyle,
       },
 
       dialogVoteVisible: false,
 
       form: {
-        num: 1
+        num: 1,
       },
 
       selectData: [
@@ -237,9 +321,9 @@ export default {
           index: 0,
           k: 0,
           j: 0,
-          dev: 0
-        }
-      ]
+          dev: 0,
+        },
+      ],
     };
   },
 
@@ -248,16 +332,16 @@ export default {
     ...mapMutations([
       "Teacher",
       "InitializeStudentModelByTeacher",
-      "AssignRealGrade"
+      "AssignRealGrade",
     ]),
 
     // kContent: function(row, column, cellValue, index){
-    kContent: function(row, column, cellValue) {
+    kContent: function (row, column, cellValue) {
       return Number.parseFloat(cellValue).toPrecision(2);
     },
 
     // jdevContent: function(row, column, cellValue, index){
-    jdevContent: function(row, column, cellValue) {
+    jdevContent: function (row, column, cellValue) {
       return Number.parseFloat(cellValue).toPrecision(4);
     },
 
@@ -270,7 +354,7 @@ export default {
       }
     },
 
-    grade: function(row) {
+    grade: function (row) {
       this.selectData[0].index = row.index;
       this.selectData[0].k = Number.parseFloat(row.k).toPrecision(2);
       this.selectData[0].j = Number.parseFloat(row.j).toPrecision(4);
@@ -280,13 +364,13 @@ export default {
       return;
     },
 
-    sendGrade: function() {
+    sendGrade: function () {
       this.dialogVoteVisible = false;
 
       const fromComponent = {
         // functionN: 3,
         studente: this.selectData[0].index,
-        voto: this.form.num
+        voto: this.form.num,
       };
 
       this.form.num = 1;
@@ -299,10 +383,27 @@ export default {
       this.componentKey += 1;
     },
 
-    inizialize: function() {
+    sendGradeFast: function () {
+      setTimeout(() => {
+        for (let i = 0; i < this.nReal; i++) {
+          let fromComponent = {
+            // functionN: 3,
+            studente: i,
+            voto: this.classe[i].kt,
+          };
+          this.Teacher(fromComponent);
+        }
+        // this.$emit('componentEvent', fromComponent);
+        // FUNZIONE DALLO STATO
+        this.loading = false;
+      }, 500);
+      this.componentKey += this.nReal;
+    },
+
+    inizialize: function () {
       const fromComponent = {
         // functionN: 5,
-        delta: this.delta
+        delta: this.delta,
       };
 
       setTimeout(() => {
@@ -313,10 +414,10 @@ export default {
       this.componentKey += 1;
     },
 
-    realGrade: function() {
+    realGrade: function () {
       const fromComponent = {
         // functionN: 7,
-        n: this.nReal
+        n: this.nReal,
       };
 
       setTimeout(() => {
@@ -325,8 +426,8 @@ export default {
         this.loading = false;
       }, 500);
       this.componentKey += 1;
-    }
-  }
+    },
+  },
 };
 </script>
 
