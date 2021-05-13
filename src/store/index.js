@@ -873,12 +873,6 @@ function Teacher(state, s, v) {
 
 function AggiornaModelloStudenteIniziale(state, studente, voto) {
 
-    let alfa,
-        Kold,
-        Jnew,
-        Jold;
-    const IMAX = state.KMAX - state.KMIN;
-    const JMAX = 1;
     const CORE = 1;
 
     //trova lo studente
@@ -888,7 +882,6 @@ function AggiornaModelloStudenteIniziale(state, studente, voto) {
 
             state.classe[i].stato = CORE;
             //salva vecchio voto dato dai peer
-            Kold = state.classe[i].k;
             //aggiorna K con il voto del docente
             //state.classe[i].k=Kteacher;
             state.classe[i].kTeacher = Kteacher;
@@ -903,20 +896,6 @@ function AggiornaModelloStudenteIniziale(state, studente, voto) {
                 }
                 return Math.sqrt(scarto / state.NUMSTUDENTIVOTATI);
             }
-            // salva il vecchio j
-            Jold = state.classe[i].j;
-            //aggiorna J
-            //alfa=(k_teacher - k_old)/IMAX
-            alfa = (Kteacher - Kold) / IMAX;
-
-            // (0<= a <= 1) Jnew=Jold+alfa*(JMAX-Jold);
-            // (a<0) Jnew=Jold+alfa*Jold;
-            if ((alfa >= 0) && (alfa <= 1))
-                Jnew = Jold + alfa * (JMAX - Jold);
-            else if (alfa < 0)
-                Jnew = Jold + (alfa * Jold);
-
-            state.classe[i].j = Jnew;
             //aggiorna stato
             //trovo lo studebnte con l'index giusto
         }
@@ -990,8 +969,6 @@ function ModificaModelloStudente(state, studenteVotante, studenteVotato) {
 
     const CORE = 1;
     const KMAX = state.KMAX;
-    const IMAX = state.KMAX - state.KMIN;
-    const JMAX = 1;
     let i;
     let alfa;
 
@@ -999,11 +976,7 @@ function ModificaModelloStudente(state, studenteVotante, studenteVotato) {
     let sVotante = new state.STUDENTE();
     let sVotato = new state.STUDENTE();
     let p = new state.STUDENTE();
-
-    let K_New,
-        beta,
-        JNew,
-        K_Old;
+    let K_Old;
 
     // controllo se studente votante è core
 
@@ -1025,12 +998,14 @@ function ModificaModelloStudente(state, studenteVotante, studenteVotato) {
 
     }
 
+    console.log(sVotato + "\n" + K_Old);
+
     p = sVotante;
     //calcolo nuovo J sia per S+ che per S-
 
     K_Old = p.k; // salvataggio per beta
 
-    alfa = CalcolaAlfa(IMAX, sVotante, sVotato);
+    alfa = state.alfakT;
 
     if (alfa < 0) {
         p.k = sVotante.k + alfa * (1 - sVotante.k);
@@ -1039,25 +1014,8 @@ function ModificaModelloStudente(state, studenteVotante, studenteVotato) {
         p.k = sVotante.k + alfa * (KMAX - sVotante.k);
     }
 
-    //aggiorna J
-    K_New = p.k;
-    beta = CalcolaBeta(IMAX, sVotante, sVotato, K_Old, K_New);
-    if ((beta == 0) && (sVotato.j == sVotante.j)) {
-
-        JNew = sVotante.j + (sVotante.k - K_Old) / IMAX;
-    } else if ((beta >= 0) && (beta <= 1)) {
-
-        JNew = sVotante.j + beta * (JMAX - sVotante.j);
-    } else if (beta < 0) {
-
-        JNew = sVotante.j + beta * sVotante.j;
-    } else {
-
-        JNew = sVotante.j;
-    }
-
     // aggiorna modello studente
-    p.j = JNew;
+
     for (i = 0; i < state.NUMSTUDENTI; i++) {
 
         if (state.classe[i].index == studenteVotante) {
@@ -1068,30 +1026,6 @@ function ModificaModelloStudente(state, studenteVotante, studenteVotato) {
     //fclose(fp);
 
     return;
-}
-
-function CalcolaAlfa(im, pVotante, pVotato) {
-    const IMAX = im;
-    const DEVMAX = 4.5;
-
-    let alfa = 0;
-    //utilizzo la stessa formula dei J+. I core non li aggiorno++
-
-    alfa = (1 / IMAX) * (pVotante.k - pVotato.k) * (pVotante.dev / DEVMAX);
-
-    //document.getElementById("input4").innerHTML = "alfa: " + alfa;
-    return alfa;
-}
-
-function CalcolaBeta(im, pVotante, pVotato, K_old, K_new) {
-    const IMAX = im;
-    const DEVMAX = 4.5;
-    var beta = 0;
-
-    beta = (1 / IMAX) * (K_new - K_old) * Math.abs(pVotato.j - pVotante.j) * (pVotante.dev / DEVMAX);
-
-    //document.getElementById("input5").innerHTML = "beta: " + beta;
-    return beta;
 }
 
 function InizializzaTuttiDev(state) {
